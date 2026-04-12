@@ -2,26 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    background-color: #F7F5F2;
+    color: #2C3440;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+@layer components {
+  .btn-primary {
+    @apply bg-gold hover:bg-gold-dark text-white font-semibold px-7 py-3 rounded-lg
+           transition-colors duration-150 text-sm tracking-wide inline-block;
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .btn-secondary {
+    @apply bg-stone hover:bg-border text-navy font-medium px-7 py-3 rounded-lg
+           border border-border transition-colors duration-150 text-sm tracking-wide inline-block;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2.5
+           rounded-lg transition-colors duration-150 text-sm;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-card border border-border p-6;
+  }
+
+  .page-container {
+    @apply max-w-7xl mx-auto px-8 md:px-12 py-10;
+  }
+
+  .section-title {
+    @apply font-display text-3xl text-navy font-bold;
+  }
+
+  .section-subtitle {
+    @apply text-muted text-sm mt-1.5 leading-relaxed;
   }
 }
