@@ -10,7 +10,7 @@ import type { Reservation, User } from '@/types'
 export const metadata: Metadata = { title: 'Calendario' }
 
 export default async function CalendarioPage() {
-  const { userId: clerkUserId } = auth()
+  const { userId: clerkUserId } = await auth()
   if (!clerkUserId) redirect('/sign-in')
 
   const supabase = createAdminClient()

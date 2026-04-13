@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase'
 import type { CreateReservationRequest, CreateReservationResponse, ApiError } from '@/types'
 
 export async function POST(req: Request): Promise<Response> {
-  const { userId: clerkUserId } = auth()
+  const { userId: clerkUserId } = await auth()
   if (!clerkUserId) {
     return Response.json({ error: 'No autenticado' } satisfies ApiError, { status: 401 })
   }

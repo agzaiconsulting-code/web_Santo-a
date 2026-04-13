@@ -9,7 +9,7 @@ import type { Reservation } from '@/types'
 export const metadata: Metadata = { title: 'Mis reservas' }
 
 export default async function ReservasPage() {
-  const { userId: clerkUserId } = auth()
+  const { userId: clerkUserId } = await auth()
   if (!clerkUserId) redirect('/sign-in')
 
   const supabase = createAdminClient()

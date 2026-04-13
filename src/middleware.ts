@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
 const isPrivateRoute = createRouteMatcher([
   '/calendario(.*)',
@@ -9,7 +10,10 @@ const isPrivateRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
   if (isPrivateRoute(req)) {
-    await auth().protect()
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.redirect(new URL('/sign-in', req.url))
+    }
   }
 })
 

@@ -6,7 +6,7 @@ export async function PATCH(
   _req: Request,
   { params }: { params: { id: string } }
 ): Promise<Response> {
-  const { userId: clerkUserId } = auth()
+  const { userId: clerkUserId } = await auth()
   if (!clerkUserId) {
     return Response.json({ error: 'No autenticado' } satisfies ApiError, { status: 401 })
   }
