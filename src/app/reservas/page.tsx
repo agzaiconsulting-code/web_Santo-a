@@ -31,7 +31,7 @@ export default async function ReservasPage() {
   const reservations = (allReservations ?? []) as unknown as Reservation[]
   const today = new Date().toISOString().split('T')[0]
 
-  const activeReservations = reservations.filter(r => r.status === 'active')
+  const activeReservations = reservations.filter(r => r.status === 'active' && r.check_out > today)
   const pastReservations   = reservations.filter(r => r.status === 'cancelled' || r.check_out <= today)
 
   return (

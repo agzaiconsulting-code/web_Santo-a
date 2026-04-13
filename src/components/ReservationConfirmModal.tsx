@@ -1,6 +1,6 @@
 'use client'
 
-import { formatDateLong, calcNights, formatPrice } from '@/lib/utils'
+import { formatDateLong, calcNights, formatPrice, calcPrice } from '@/lib/utils'
 
 interface ReservationConfirmModalProps {
   checkIn: string    // 'YYYY-MM-DD'
@@ -18,7 +18,7 @@ export function ReservationConfirmModal({
   isLoading,
 }: ReservationConfirmModalProps) {
   const nights = calcNights(checkIn, checkOut)
-  const price = formatPrice(nights * 30)
+  const price = formatPrice(calcPrice(nights))
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

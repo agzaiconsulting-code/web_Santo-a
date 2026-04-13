@@ -122,6 +122,11 @@ describe('getDayInfo', () => {
     const info = getDayInfo('2020-01-03', 3, [reservation], user, null, 0, null, null)
     expect(info.state).toBe('past')
   })
+
+  it('en selección parcial (solo start), días no seleccionados siguen siendo available', () => {
+    const info = getDayInfo('2030-07-10', 10, noReservations, user, null, 0, '2030-07-01', null)
+    expect(info.state).toBe('available')
+  })
 })
 
 describe('isDaySelectable', () => {
@@ -131,6 +136,9 @@ describe('isDaySelectable', () => {
   it('reserved no es seleccionable', () => expect(isDaySelectable('reserved')).toBe(false))
   it('august-blocked no es seleccionable', () => expect(isDaySelectable('august-blocked')).toBe(false))
   it('quota-full no es seleccionable', () => expect(isDaySelectable('quota-full')).toBe(false))
+  it('selected-start es seleccionable', () => expect(isDaySelectable('selected-start')).toBe(true))
+  it('selected-end no es seleccionable', () => expect(isDaySelectable('selected-end')).toBe(false))
+  it('in-range es seleccionable', () => expect(isDaySelectable('in-range')).toBe(true))
 })
 
 describe('hasReservationConflict', () => {

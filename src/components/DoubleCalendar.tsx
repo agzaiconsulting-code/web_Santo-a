@@ -4,7 +4,7 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { getDayInfo, isDaySelectable, hasReservationConflict, type DayInfo } from '@/lib/calendar'
-import { getDaysInMonth, getMonthStartDayOffset, monthName } from '@/lib/utils'
+import { getDaysInMonth, getMonthStartDayOffset, monthName, formatDateLong } from '@/lib/utils'
 import { ReservationConfirmModal } from '@/components/ReservationConfirmModal'
 import type { Reservation, User } from '@/types'
 
@@ -152,7 +152,7 @@ export function DoubleCalendar({
       )}
       {selectedStart && !selectedEnd && (
         <p className="text-sm text-blue text-center">
-          Entrada: <strong>{selectedStart}</strong> — ahora selecciona el día de salida
+          Entrada: <strong>{formatDateLong(selectedStart)}</strong> — ahora selecciona el día de salida
         </p>
       )}
 
