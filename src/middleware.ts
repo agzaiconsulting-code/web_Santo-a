@@ -1,17 +1,16 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
 
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/normas',
-  '/sign-in(.*)',
-  '/api/webhooks(.*)',
+const isPrivateRoute = createRouteMatcher([
+  '/calendario(.*)',
+  '/reservas(.*)',
+  '/fotos(.*)',
+  '/admin(.*)',
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isPublicRoute(req)) return NextResponse.next()
-  await auth().protect()
-  return NextResponse.next()
+  if (isPrivateRoute(req)) {
+    await auth().protect()
+  }
 })
 
 export const config = {
