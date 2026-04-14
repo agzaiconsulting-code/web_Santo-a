@@ -9,8 +9,7 @@ const STATS = [
 ]
 
 // Foto temporal de la costa cantábrica (sustituir por foto real de la casa)
-const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1600&q=85'
+const HERO_IMAGE = '/images/hero.jpg.png'
 
 export default function HomePage() {
   return (
@@ -22,13 +21,13 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0">
           <Image
             src={HERO_IMAGE}
-            alt="Costa cantábrica cerca de Santoña"
+            alt="Casa Cervantes en Santoña"
             fill
-            className="object-cover"
+            className="object-cover opacity-60 blur-[1.5px] scale-105"
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(20,35,55,0.55)] via-[rgba(20,35,55,0.3)] to-[rgba(20,35,55,0.72)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(20,35,55,0.45)] via-[rgba(20,35,55,0.2)] to-[rgba(20,35,55,0.65)]" />
         </div>
 
         {/* Contenido centrado */}
@@ -43,7 +42,7 @@ export default function HomePage() {
             <em className="text-gold not-italic">Cantábrico</em>
           </h1>
 
-          <p className="text-blue-light/80 text-lg font-light leading-relaxed mb-10 max-w-md mx-auto">
+          <p className="text-black text-lg font-light leading-relaxed mb-10 max-w-md mx-auto">
             7 familias, una casa compartida en Santoña.<br />
             Reserva tus días de forma sencilla y transparente.
           </p>
