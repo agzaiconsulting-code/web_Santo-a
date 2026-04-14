@@ -4,8 +4,9 @@ import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createAdminClient } from '@/lib/supabase'
 import { AdminTabs } from '@/components/AdminTabs'
+import { AugustAssignment } from '@/components/AugustAssignment'
 import { formatPrice } from '@/lib/utils'
-import type { Reservation } from '@/types'
+import type { Reservation, Family } from '@/types'
 
 export const metadata: Metadata = { title: 'Admin' }
 
@@ -28,6 +29,7 @@ export default async function AdminPage() {
   const [
     { data: reservationsRaw },
     { data: augustAssignment },
+    { data: familiesRaw },
   ] = await Promise.all([
     supabase
       .from('reservations')
@@ -40,15 +42,21 @@ export default async function AdminPage() {
       .select('family_id, family:families(name)')
       .eq('year', currentYear)
       .maybeSingle(),
+    supabase
+      .from('families')
+      .select('id, name, created_at')
+      .order('name'),
   ])
 
-  const reservations = (reservationsRaw ?? []) as unknown as Reservation[]
+  const reservations   = (reservationsRaw ?? []) as unknown as Reservation[]
+  const families       = (familiesRaw ?? []) as unknown as Family[]
 
   // Calcular stats
   const activeReservations = reservations.filter(r => r.status === 'active')
   const totalNights  = activeReservations.reduce((s, r) => s + r.nights, 0)
   const totalIncome  = activeReservations.reduce((s, r) => s + r.total_price, 0)
   const augustFamily = (augustAssignment as unknown as { family?: { name: string } | null } | null)?.family?.name ?? '—'
+  const augustFamilyId = (augustAssignment as { family_id?: string } | null)?.family_id ?? null
 
   const currentMonth = new Date().getMonth() + 1
 
@@ -66,6 +74,13 @@ export default async function AdminPage() {
         <StatCard label="Ingresos"          value={formatPrice(totalIncome)}           sub={`año ${currentYear}`} />
         <StatCard label="Familia de agosto" value={augustFamily}                       sub={String(currentYear)} />
       </div>
+
+      {/* Asignación agosto */}
+      <AugustAssignment
+        year={currentYear}
+        families={families}
+        currentFamilyId={augustFamilyId}
+      />
 
       {/* Tabs por mes */}
       <div>
