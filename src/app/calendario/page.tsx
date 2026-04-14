@@ -58,7 +58,7 @@ export default async function CalendarioPage({
       .order('check_in'),
     supabase
       .from('august_assignments')
-      .select('family_id')
+      .select('family_id, family:families(name)')
       .eq('year', currentYear)
       .maybeSingle(),
     effectiveUser.family_id
@@ -66,9 +66,10 @@ export default async function CalendarioPage({
       : Promise.resolve({ data: 0, error: null }),
   ])
 
-  const reservations = (reservationsRaw ?? []) as unknown as Reservation[]
-  const quotaUsed    = (quota as number | null) ?? 0
-  const familyName   = (effectiveUser as User & { family?: { name: string } | null }).family?.name ?? 'Tu familia'
+  const reservations  = (reservationsRaw ?? []) as unknown as Reservation[]
+  const quotaUsed     = (quota as number | null) ?? 0
+  const familyName    = (effectiveUser as User & { family?: { name: string } | null }).family?.name ?? 'Tu familia'
+  const augustFamilyName = (augustAssignment as unknown as { family?: { name: string } | null } | null)?.family?.name ?? null
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
@@ -86,6 +87,21 @@ export default async function CalendarioPage({
           Tu cuenta todavía no tiene una familia asignada. Contacta con el administrador para poder hacer reservas.
         </div>
       )}
+
+      {/* Familia de agosto */}
+      <div className="bg-white border border-border rounded-xl px-4 py-3 shadow-card flex items-center gap-3">
+        <span className="text-lg">☀️</span>
+        <div>
+          <p className="text-xs font-medium text-muted uppercase tracking-wide">Agosto {currentYear}</p>
+          {augustFamilyName ? (
+            <p className="text-sm text-navy font-medium">
+              Este año le corresponde a la <span className="font-semibold">{augustFamilyName}</span>
+            </p>
+          ) : (
+            <p className="text-sm text-muted">Sin asignar — el administrador debe configurarlo</p>
+          )}
+        </div>
+      </div>
 
       <DoubleCalendar
         reservations={reservations}
