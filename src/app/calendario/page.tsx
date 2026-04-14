@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createAdminClient } from '@/lib/supabase'
+import { getSupabaseUser } from '@/lib/getUser'
 import { DoubleCalendar } from '@/components/DoubleCalendar'
 import { FamilyQuotaIndicator } from '@/components/FamilyQuotaIndicator'
 import type { Reservation, User } from '@/types'
@@ -19,15 +20,10 @@ export default async function CalendarioPage({
 
   const supabase = createAdminClient()
 
-  const { data: currentUser } = await supabase
-    .from('users')
-    .select('id, clerk_user_id, email, first_name, last_name, family_id, role, receive_notifications, created_at, updated_at, family:families(id, name, created_at)')
-    .eq('clerk_user_id', clerkUserId)
-    .single()
-
+  const currentUser = await getSupabaseUser(clerkUserId)
   if (!currentUser) redirect('/sign-in')
 
-  const user = currentUser as unknown as User & { family: { id: string; name: string; created_at: string } | null }
+  const user = currentUser as User & { family: { id: string; name: string; created_at: string } | null }
 
   // Cargar forUser si el admin pasa ?for=<userId>
   let forUser: User | null = null

@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createAdminClient } from '@/lib/supabase'
+import { getSupabaseUser } from '@/lib/getUser'
 import { ReservationList } from '@/components/ReservationList'
 import type { Reservation, User } from '@/types'
 
@@ -14,12 +15,7 @@ export default async function ReservasPage() {
 
   const supabase = createAdminClient()
 
-  const { data: currentUser } = await supabase
-    .from('users')
-    .select('id, role')
-    .eq('clerk_user_id', clerkUserId)
-    .single()
-
+  const currentUser = await getSupabaseUser(clerkUserId)
   if (!currentUser) redirect('/sign-in')
 
   const isAdmin = currentUser.role === 'admin'

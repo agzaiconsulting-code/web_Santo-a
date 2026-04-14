@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createAdminClient } from '@/lib/supabase'
+import { getSupabaseUser } from '@/lib/getUser'
 import { AdminTabs } from '@/components/AdminTabs'
 import { AugustAssignment } from '@/components/AugustAssignment'
 import { formatPrice } from '@/lib/utils'
@@ -16,12 +17,7 @@ export default async function AdminPage() {
 
   const supabase = createAdminClient()
 
-  const { data: currentUser } = await supabase
-    .from('users')
-    .select('id, role')
-    .eq('clerk_user_id', clerkUserId)
-    .single()
-
+  const currentUser = await getSupabaseUser(clerkUserId)
   if (!currentUser || currentUser.role !== 'admin') redirect('/')
 
   const currentYear = new Date().getFullYear()
