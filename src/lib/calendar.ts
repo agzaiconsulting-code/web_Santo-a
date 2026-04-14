@@ -18,7 +18,8 @@ export interface DayInfo {
   dayOfMonth: number
   state: DayState
   hasGoldDot: boolean // true cuando es hoy (se superpone al estado principal)
-  reserverName?: string // solo cuando state === 'reserved'
+  reserverName?: string   // solo cuando state === 'reserved'
+  reservationId?: string  // solo cuando state === 'reserved'
 }
 
 export function getDayInfo(
@@ -46,7 +47,7 @@ export function getDayInfo(
   if (coveringReservation) {
     const u = coveringReservation.user
     const reserverName = u ? `${u.first_name} ${u.last_name}` : 'Reservado'
-    return { date, dayOfMonth, state: 'reserved', hasGoldDot, reserverName }
+    return { date, dayOfMonth, state: 'reserved', hasGoldDot, reserverName, reservationId: coveringReservation.id }
   }
 
   // 3. Agosto bloqueado: mes 8 y la familia del usuario no es la asignada

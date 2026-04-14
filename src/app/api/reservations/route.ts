@@ -15,26 +15,34 @@ export async function POST(req: Request): Promise<Response> {
     return Response.json({ error: 'JSON inválido' } satisfies ApiError, { status: 400 })
   }
 
-  const { check_in, check_out } = body
+  const { check_in, check_out, for_user_id } = body
   if (!check_in || !check_out) {
     return Response.json({ error: 'check_in y check_out son obligatorios' } satisfies ApiError, { status: 400 })
   }
 
   const supabase = createAdminClient()
 
-  const { data: user, error: userError } = await supabase
+  // Caller
+  const { data: caller, error: callerError } = await supabase
     .from('users')
-    .select('id')
+    .select('id, role')
     .eq('clerk_user_id', clerkUserId)
     .single()
 
-  if (userError || !user) {
+  if (callerError || !caller) {
     return Response.json({ error: 'Usuario no encontrado en el sistema' } satisfies ApiError, { status: 404 })
   }
 
+  // Si se pasa for_user_id, verificar que el caller es admin
+  if (for_user_id && caller.role !== 'admin') {
+    return Response.json({ error: 'No autorizado' } satisfies ApiError, { status: 403 })
+  }
+
+  const targetUserId = for_user_id ?? caller.id
+
   const { data: reservationId, error: rpcError } = await supabase
     .rpc('create_reservation', {
-      p_user_id:  user.id,
+      p_user_id:   targetUserId,
       p_check_in:  check_in,
       p_check_out: check_out,
     })

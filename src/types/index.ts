@@ -86,8 +86,9 @@ export interface ApiError {
 }
 
 export interface CreateReservationRequest {
-  check_in: string  // 'YYYY-MM-DD'
-  check_out: string // 'YYYY-MM-DD'
+  check_in:     string  // 'YYYY-MM-DD'
+  check_out:    string  // 'YYYY-MM-DD'
+  for_user_id?: string  // admin only: crear reserva para este usuario interno
 }
 
 export interface CreateReservationResponse {

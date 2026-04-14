@@ -1,0 +1,176 @@
+<style>
+  :root {
+    --navy: #1D3557;
+    --blue: #4A7C9E;
+    --gold: #C4943A;
+    --light-blue: #A8C8E0;
+    --bg: #F7F5F2;
+    --border: #e2ddd8;
+    --muted: #6a7a88;
+    --white: #ffffff;
+  }
+  .mock-page { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .mock-header { background: white; border-bottom: 1px solid var(--border); padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .mock-header .logo { font-family: Georgia, serif; font-weight: bold; color: var(--navy); font-size: 13px; }
+  .mock-header .nav { display: flex; gap: 12px; font-size: 10px; color: var(--muted); }
+  .mock-header .nav span { color: var(--navy); font-weight: 600; border-bottom: 2px solid var(--gold); padding-bottom: 1px; }
+  .stat-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 12px; background: white; border-bottom: 1px solid var(--border); }
+  .stat { background: var(--bg); border-radius: 8px; padding: 8px 10px; }
+  .stat .label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat .value { font-size: 16px; font-weight: 700; color: var(--navy); margin-top: 2px; }
+  .stat .sub { font-size: 9px; color: var(--blue); }
+  .section-header { padding: 10px 12px 6px; font-size: 11px; font-weight: 600; color: var(--navy); display: flex; align-items: center; justify-content: space-between; }
+  .month-pill { background: var(--navy); color: white; border-radius: 12px; padding: 3px 10px; font-size: 9px; }
+  .table-wrap { padding: 0 12px 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 10px; }
+  th { text-align: left; color: var(--muted); font-weight: 500; padding: 5px 8px; border-bottom: 1px solid var(--border); font-size: 9px; text-transform: uppercase; }
+  td { padding: 6px 8px; border-bottom: 1px solid #f0ece8; color: #333; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 8px; font-weight: 600; }
+  .badge-active { background: #dcf3e8; color: #1a7a4a; }
+  .badge-cancelled { background: #fde8e8; color: #b91c1c; }
+  .tabs { display: flex; gap: 2px; padding: 8px 12px 0; }
+  .tab { padding: 5px 10px; font-size: 9px; border-radius: 6px 6px 0 0; cursor: pointer; color: var(--muted); background: #ede9e4; }
+  .tab.active { background: white; color: var(--navy); font-weight: 600; border: 1px solid var(--border); border-bottom: 1px solid white; }
+  .sidebar-layout { display: grid; grid-template-columns: 160px 1fr; min-height: 280px; }
+  .sidebar { background: var(--navy); padding: 10px; }
+  .sidebar .title { font-size: 9px; color: var(--light-blue); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; margin-top: 4px; }
+  .sidebar .month-item { padding: 5px 8px; border-radius: 5px; font-size: 9px; color: rgba(255,255,255,0.7); cursor: pointer; }
+  .sidebar .month-item.active { background: rgba(255,255,255,0.15); color: white; font-weight: 600; }
+  .sidebar .month-item .count { float: right; background: var(--gold); color: white; border-radius: 8px; padding: 1px 5px; font-size: 8px; }
+  .main-content { padding: 10px; background: white; }
+  .month-selector { display: flex; gap: 4px; flex-wrap: wrap; padding: 8px 12px; }
+  .month-btn { padding: 4px 10px; border-radius: 12px; font-size: 9px; cursor: pointer; background: #ede9e4; color: var(--muted); }
+  .month-btn.active { background: var(--navy); color: white; }
+  .month-summary { display: flex; gap: 6px; padding: 6px 12px; }
+  .ms-item { background: var(--bg); border-radius: 6px; padding: 4px 8px; font-size: 9px; }
+  .ms-item strong { color: var(--navy); }
+  .audit-entry { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-bottom: 1px solid #f5f2ef; font-size: 9px; }
+  .audit-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+  .audit-text { flex: 1; color: #444; }
+  .audit-time { color: var(--muted); }
+</style>
+
+<h2>Layout de la página /admin</h2>
+<p class="subtitle">¿Cómo debe organizarse la información?</p>
+
+<div class="cards">
+
+  <!-- OPTION A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-page">
+        <div class="mock-header">
+          <span class="logo">Casa Cervantes</span>
+          <div class="nav"><span>Admin</span><span style="color:var(--muted)">Calendario</span><span style="color:var(--muted)">Reservas</span></div>
+        </div>
+        <div class="stat-bar">
+          <div class="stat"><div class="label">Reservas activas</div><div class="value">12</div><div class="sub">↑ 3 este mes</div></div>
+          <div class="stat"><div class="label">Noches totales</div><div class="value">148</div><div class="sub">año 2026</div></div>
+          <div class="stat"><div class="label">Ingresos</div><div class="value">4.440€</div><div class="sub">año 2026</div></div>
+          <div class="stat"><div class="label">Familia agosto</div><div class="value" style="font-size:12px">Fam. Rafa</div><div class="sub">2026</div></div>
+        </div>
+        <div class="tabs">
+          <div class="tab active">Abril 2026</div>
+          <div class="tab">Mayo</div>
+          <div class="tab">Junio</div>
+          <div class="tab">Julio</div>
+          <div class="tab">Agosto</div>
+        </div>
+        <div class="table-wrap" style="background:white; border: 1px solid var(--border); border-top: none; border-radius: 0 0 6px 6px; margin-bottom: 8px;">
+          <table>
+            <tr><th>Persona</th><th>Familia</th><th>Entrada</th><th>Salida</th><th>Noches</th><th>Estado</th></tr>
+            <tr><td>Adrian Gomez</td><td>Fam. Luis</td><td>15 abr</td><td>20 abr</td><td>5</td><td><span class="badge badge-active">Activa</span></td></tr>
+            <tr><td>Susana García</td><td>Fam. Rafa</td><td>22 abr</td><td>27 abr</td><td>5</td><td><span class="badge badge-active">Activa</span></td></tr>
+            <tr><td>Amalia López</td><td>Fam. Amalia</td><td>10 abr</td><td>12 abr</td><td>2</td><td><span class="badge badge-cancelled">Cancelada</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Stats + pestañas por mes</h3>
+      <p>Barra de resumen arriba, luego pestañas para navegar entre meses. Vista de tabla completa por mes seleccionado.</p>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-page">
+        <div class="mock-header">
+          <span class="logo">Casa Cervantes</span>
+          <div class="nav"><span>Admin</span><span style="color:var(--muted)">Calendario</span></div>
+        </div>
+        <div class="sidebar-layout">
+          <div class="sidebar">
+            <div class="title">Resumen 2026</div>
+            <div style="color:white; font-size:13px; font-weight:700; margin-bottom: 2px;">4.440€</div>
+            <div style="color: var(--light-blue); font-size:9px; margin-bottom: 10px;">148 noches · 12 reservas</div>
+            <div class="title">Meses</div>
+            <div class="month-item">Enero <span class="count">0</span></div>
+            <div class="month-item">Febrero <span class="count">0</span></div>
+            <div class="month-item">Marzo <span class="count">2</span></div>
+            <div class="month-item active">Abril <span class="count">3</span></div>
+            <div class="month-item">Mayo <span class="count">4</span></div>
+            <div class="month-item">Junio <span class="count">5</span></div>
+            <div class="month-item">Julio <span class="count">2</span></div>
+          </div>
+          <div class="main-content">
+            <div class="section-header">Reservas — Abril 2026 <span class="month-pill">3 reservas · 12 noches · 360€</span></div>
+            <table style="font-size:10px">
+              <tr><th>Persona</th><th>Familia</th><th>Entrada</th><th>Salida</th><th>Noches</th><th>Estado</th></tr>
+              <tr><td>Adrian Gomez</td><td>Fam. Luis</td><td>15 abr</td><td>20 abr</td><td>5</td><td><span class="badge badge-active">Activa</span></td></tr>
+              <tr><td>Susana García</td><td>Fam. Rafa</td><td>22 abr</td><td>27 abr</td><td>5</td><td><span class="badge badge-active">Activa</span></td></tr>
+              <tr><td>Amalia López</td><td>Fam. Amalia</td><td>10 abr</td><td>12 abr</td><td>2</td><td><span class="badge badge-cancelled">Cancelada</span></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Sidebar de meses + tabla principal</h3>
+      <p>Panel izquierdo con resumen anual y lista de meses. Al seleccionar un mes, la tabla de la derecha muestra las reservas.</p>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-page">
+        <div class="mock-header">
+          <span class="logo">Casa Cervantes</span>
+          <div class="nav"><span>Admin</span><span style="color:var(--muted)">Calendario</span></div>
+        </div>
+        <div class="stat-bar">
+          <div class="stat"><div class="label">Activas</div><div class="value">12</div></div>
+          <div class="stat"><div class="label">Noches</div><div class="value">148</div></div>
+          <div class="stat"><div class="label">Ingresos</div><div class="value">4.440€</div></div>
+          <div class="stat"><div class="label">Canceladas</div><div class="value">3</div></div>
+        </div>
+        <div class="month-selector">
+          <div class="month-btn">Ene</div><div class="month-btn">Feb</div><div class="month-btn">Mar</div>
+          <div class="month-btn active">Abr</div><div class="month-btn">May</div><div class="month-btn">Jun</div>
+          <div class="month-btn">Jul</div><div class="month-btn">Ago</div><div class="month-btn">Sep</div>
+        </div>
+        <div class="month-summary">
+          <div class="ms-item">Mes: <strong>Abril</strong></div>
+          <div class="ms-item">Reservas: <strong>3</strong></div>
+          <div class="ms-item">Noches: <strong>12</strong></div>
+          <div class="ms-item">Ingresos: <strong>360€</strong></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Persona</th><th>Familia</th><th>Entrada</th><th>Salida</th><th>Noches</th><th>Estado</th></tr>
+            <tr><td>Adrian Gomez</td><td>Fam. Luis</td><td>15 abr</td><td>20 abr</td><td>5</td><td><span class="badge badge-active">Activa</span></td></tr>
+            <tr><td>Susana García</td><td>Fam. Rafa</td><td>22 abr</td><td>27 abr</td><td>5</td><td><span class="badge badge-active">Activa</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Stats + selector de mes + tabla</h3>
+      <p>Barra de stats globales, pills de mes para filtrar, resumen del mes seleccionado, tabla debajo. Una sola columna, todo visible de un vistazo.</p>
+    </div>
+  </div>
+
+</div>

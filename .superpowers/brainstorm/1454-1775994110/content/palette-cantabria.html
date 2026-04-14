@@ -1,0 +1,136 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&family=Outfit:wght@300;400;500&display=swap');
+
+  .palette-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent;
+  }
+  .palette-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+  .palette-card.selected { border-color: #2563eb; }
+
+  .card-header {
+    padding: 22px 28px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-nav a { margin: 0 8px; text-decoration: none; font-size: 12px; }
+  .card-hero { padding: 40px 28px; text-align: center; }
+  .card-hero .eyebrow { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
+  .card-hero .title { margin: 0 0 10px; line-height: 1.25; }
+  .card-hero .subtitle { margin: 0 0 22px; font-size: 14px; line-height: 1.6; }
+  .card-cta { display: inline-block; padding: 10px 26px; border-radius: 5px; font-size: 13px; font-weight: 500; text-decoration: none; letter-spacing: 0.04em; }
+  .swatches { display: flex; padding: 14px 22px 8px; gap: 6px; }
+  .swatch { height: 24px; flex: 1; border-radius: 3px; }
+  .tag { padding: 8px 22px 14px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+</style>
+
+<h2>Paleta ajustada al Cantábrico</h2>
+<p class="subtitle">Santoña: mar gris-verde, piedra, colinas, cielos nublados con destellos de sol. Tres propuestas recalibradas.</p>
+
+<div class="cards" style="grid-template-columns: repeat(3, 1fr);">
+
+  <!-- A: Piedra y mar gris -->
+  <div class="card palette-card" data-choice="a" onclick="toggleSelect(this)">
+    <div style="background:#F4F1EC;">
+      <div class="card-header" style="background:#F4F1EC; color:#2A2520;">
+        <span style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:#2A3B4C; letter-spacing:0.02em;">Casa Cervantes</span>
+        <span style="font-family:'DM Sans',sans-serif;">
+          <a style="color:#5A6872;">Inicio</a>
+          <a style="color:#5A6872;">Calendario</a>
+          <a style="color:#5A6872;">Normas</a>
+        </span>
+      </div>
+      <!-- hero: foto simulada con gradiente pizarra -->
+      <div class="card-hero" style="background: linear-gradient(170deg, #3D5263 0%, #2A3B4C 60%, #1E2D3C 100%); color:#F4F1EC;">
+        <div class="eyebrow" style="color:#9BAFC0;">Calle Cervantes · Santoña</div>
+        <h3 class="title" style="font-family:'Playfair Display',serif; font-size:26px; color:#EEE8DF; font-weight:700;">La casa de todos<br>en el Cantábrico</h3>
+        <p class="subtitle" style="color:#9BAFC0; font-family:'DM Sans',sans-serif; font-weight:300;">Gestiona tus días en familia.<br>Santoña te espera.</p>
+        <a class="card-cta" style="background:#B5865A; color:#F9F5EF; font-family:'DM Sans',sans-serif;">Ver disponibilidad →</a>
+      </div>
+      <div class="swatches" style="background:#F4F1EC;">
+        <div class="swatch" style="background:#F4F1EC; border:1px solid #DDD8D0;"></div>
+        <div class="swatch" style="background:#3D5263;"></div>
+        <div class="swatch" style="background:#2A3B4C;"></div>
+        <div class="swatch" style="background:#B5865A;"></div>
+        <div class="swatch" style="background:#9BAFC0;"></div>
+      </div>
+      <div class="tag" style="background:#F4F1EC; color:#8A8078; font-family:'DM Sans',sans-serif;">Playfair Display + DM Sans · Pizarra oceánica</div>
+    </div>
+    <div class="card-body" style="background:#F4F1EC;">
+      <h3 style="font-family:'Playfair Display',serif; color:#2A3B4C;">A — Pizarra y ocre</h3>
+      <p style="font-family:'DM Sans',sans-serif; color:#5A6068; font-size:13px;">Azul pizarra profundo + lino crudo + acento ocre tostado. Evoca el mar Cantábrico con los tejados de piedra de Santoña. Seria y elegante.</p>
+    </div>
+  </div>
+
+  <!-- B: Verde cantábrico + crema -->
+  <div class="card palette-card" data-choice="b" onclick="toggleSelect(this)">
+    <div style="background:#F6F4EE;">
+      <div class="card-header" style="background:#1E3A2F; color:#EAE6DA;">
+        <span style="font-family:'DM Serif Display',serif; font-size:18px; font-weight:400; color:#EAE6DA; letter-spacing:0.08em;">CASA CERVANTES</span>
+        <span style="font-family:'Outfit',sans-serif;">
+          <a style="color:#8ABBA0;">Inicio</a>
+          <a style="color:#8ABBA0;">Calendario</a>
+          <a style="color:#8ABBA0;">Normas</a>
+        </span>
+      </div>
+      <div class="card-hero" style="background: linear-gradient(160deg, #2A5240 0%, #1E3A2F 100%); color:#EAE6DA; padding:40px 28px;">
+        <div class="eyebrow" style="color:#8ABBA0;">Calle Cervantes · Santoña</div>
+        <h3 class="title" style="font-family:'DM Serif Display',serif; font-size:26px; color:#EAE6DA; font-weight:400;">La casa de todos<br>en el Cantábrico</h3>
+        <p class="subtitle" style="color:#8ABBA0; font-family:'Outfit',sans-serif; font-weight:300;">Gestiona tus días en familia.<br>Santoña te espera.</p>
+        <a class="card-cta" style="background:#C9906A; color:#F9F5EF; font-family:'Outfit',sans-serif;">Ver disponibilidad →</a>
+      </div>
+      <div class="swatches" style="background:#F6F4EE;">
+        <div class="swatch" style="background:#F6F4EE; border:1px solid #E0DAD0;"></div>
+        <div class="swatch" style="background:#1E3A2F;"></div>
+        <div class="swatch" style="background:#2A5240;"></div>
+        <div class="swatch" style="background:#C9906A;"></div>
+        <div class="swatch" style="background:#8ABBA0;"></div>
+      </div>
+      <div class="tag" style="background:#F6F4EE; color:#8A8070; font-family:'Outfit',sans-serif;">DM Serif Display + Outfit · Verde prado cantábrico</div>
+    </div>
+    <div class="card-body" style="background:#F6F4EE;">
+      <h3 style="font-family:'DM Serif Display',serif; color:#1E3A2F; font-weight:400;">B — Verde cantábrico</h3>
+      <p style="font-family:'Outfit',sans-serif; color:#5A6068; font-size:13px;">Verde bosque profundo + crema + salmón cálido. Captura los prados verdes y la naturaleza de Cantabria. Diferente y memorable.</p>
+    </div>
+  </div>
+
+  <!-- C: Gris perla + azul Cantábrico + oro viejo -->
+  <div class="card palette-card" data-choice="c" onclick="toggleSelect(this)">
+    <div style="background:#F7F5F2;">
+      <div class="card-header" style="background:#F7F5F2; color:#2C2C2C; border-bottom: 1px solid #E5E0D8;">
+        <span style="font-family:'Playfair Display',serif; font-size:18px; font-weight:600; color:#1D3557; letter-spacing:0.04em;">Casa Cervantes</span>
+        <span style="font-family:'DM Sans',sans-serif;">
+          <a style="color:#6A7A88;">Inicio</a>
+          <a style="color:#6A7A88;">Calendario</a>
+          <a style="color:#6A7A88;">Normas</a>
+        </span>
+      </div>
+      <div class="card-hero" style="background: linear-gradient(170deg, #4A7C9E 0%, #1D3557 100%); color:#F7F5F2; padding:40px 28px;">
+        <div class="eyebrow" style="color:#A8C8E0;">Calle Cervantes · Santoña</div>
+        <h3 class="title" style="font-family:'Playfair Display',serif; font-size:26px; color:#F7F5F2; font-weight:700;">La casa de todos<br>en el Cantábrico</h3>
+        <p class="subtitle" style="color:#A8C8E0; font-family:'DM Sans',sans-serif; font-weight:300;">Gestiona tus días en familia.<br>Santoña te espera.</p>
+        <a class="card-cta" style="background:#C4943A; color:#F9F5EF; font-family:'DM Sans',sans-serif;">Ver disponibilidad →</a>
+      </div>
+      <div class="swatches" style="background:#F7F5F2;">
+        <div class="swatch" style="background:#F7F5F2; border:1px solid #E5E0D8;"></div>
+        <div class="swatch" style="background:#1D3557;"></div>
+        <div class="swatch" style="background:#4A7C9E;"></div>
+        <div class="swatch" style="background:#C4943A;"></div>
+        <div class="swatch" style="background:#A8C8E0;"></div>
+      </div>
+      <div class="tag" style="background:#F7F5F2; color:#8A8078; font-family:'DM Sans',sans-serif;">Playfair Display + DM Sans · Azul Cantábrico + oro</div>
+    </div>
+    <div class="card-body" style="background:#F7F5F2;">
+      <h3 style="font-family:'Playfair Display',serif; color:#1D3557;">C — Cantábrico dorado</h3>
+      <p style="font-family:'DM Sans',sans-serif; color:#5A6068; font-size:13px;">Azul Cantábrico medio + azul marino oscuro + oro viejo como acento. El mar del norte en su versión más luminosa cuando sale el sol. Equilibrada y atemporal.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top: 24px; font-size: 13px; opacity: 0.6;">Nota: el terracota mediterráneo se ha sustituido por ocre/oro/salmón, más propio de la arquitectura y luz cantábrica.</p>

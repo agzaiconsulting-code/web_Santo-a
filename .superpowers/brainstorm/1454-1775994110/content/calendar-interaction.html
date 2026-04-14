@@ -1,0 +1,255 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { box-sizing: border-box; }
+
+  .cal-wrap {
+    font-family: 'DM Sans', sans-serif;
+    background: #F7F5F2;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .cal-header h4 {
+    font-family: 'Playfair Display', serif;
+    color: #1D3557;
+    font-size: 16px;
+    margin: 0;
+  }
+  .cal-header .nav-btn {
+    background: none;
+    border: none;
+    color: #4A7C9E;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+  .cal-day-name {
+    text-align: center;
+    font-size: 11px;
+    color: #9BAFC0;
+    padding: 4px 0 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .cal-day {
+    text-align: center;
+    padding: 7px 4px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #2C3E50;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.15s;
+  }
+  .cal-day.empty { background: none; cursor: default; }
+  .cal-day.reserved {
+    background: rgba(74,124,158,0.15);
+    color: #4A7C9E;
+    font-weight: 500;
+  }
+  .cal-day.reserved::after {
+    content: '';
+    position: absolute;
+    bottom: 3px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: #4A7C9E;
+  }
+  .cal-day.selected-start, .cal-day.selected-end {
+    background: #1D3557;
+    color: #F7F5F2;
+    font-weight: 600;
+    border-radius: 6px;
+  }
+  .cal-day.in-range {
+    background: rgba(196,148,58,0.18);
+    color: #8A6020;
+    border-radius: 0;
+  }
+  .cal-day.today {
+    font-weight: 700;
+    color: #C4943A;
+    border: 1px solid #C4943A;
+  }
+  .cal-day.blocked {
+    background: #EDE8E0;
+    color: #B0A898;
+    cursor: not-allowed;
+    text-decoration: line-through;
+    font-size: 12px;
+  }
+  .cal-day.agosto-blocked {
+    background: repeating-linear-gradient(45deg, #EDE8E0, #EDE8E0 3px, #F7F5F2 3px, #F7F5F2 8px);
+    color: #B0A898;
+    cursor: not-allowed;
+    font-size: 12px;
+  }
+  .legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    font-size: 11px;
+    color: #6A7A88;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  .annotation {
+    background: #1D3557;
+    color: #F7F5F2;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-top: 10px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .annotation strong { color: #C4943A; }
+</style>
+
+<h2>¿Cómo debe funcionar la selección de fechas?</h2>
+<p class="subtitle">Las tres opciones usan el mismo calendario mensual. La diferencia está en cómo el usuario selecciona su rango de fechas.</p>
+
+<div class="cards" style="grid-template-columns: repeat(3, 1fr); align-items: start;">
+
+  <!-- OPCIÓN A: Click en inicio, click en fin (2 clics) -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="card-body">
+      <h3 style="font-family:'Playfair Display',serif; color:#1D3557;">A — Dos clics</h3>
+      <p style="font-family:'DM Sans',sans-serif; color:#5A6068; font-size:13px; margin-bottom:16px;">1º clic = entrada. 2º clic = salida. El rango se ilumina entre ambas fechas. Simple y claro en móvil.</p>
+
+      <div class="cal-wrap">
+        <div class="cal-header">
+          <button class="nav-btn">‹</button>
+          <h4>Julio 2026</h4>
+          <button class="nav-btn">›</button>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-day-name">L</div><div class="cal-day-name">M</div><div class="cal-day-name">X</div><div class="cal-day-name">J</div><div class="cal-day-name">V</div><div class="cal-day-name">S</div><div class="cal-day-name">D</div>
+          <div class="cal-day empty"></div><div class="cal-day empty"></div>
+          <div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div><div class="cal-day">5</div>
+          <div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div>
+          <div class="cal-day reserved">10</div><div class="cal-day reserved">11</div><div class="cal-day reserved">12</div>
+          <div class="cal-day reserved">13</div><div class="cal-day reserved">14</div><div class="cal-day reserved">15</div>
+          <div class="cal-day">16</div><div class="cal-day today">17</div>
+          <div class="cal-day selected-start">18</div><div class="cal-day in-range">19</div><div class="cal-day in-range">20</div><div class="cal-day in-range">21</div>
+          <div class="cal-day in-range">22</div><div class="cal-day in-range">23</div><div class="cal-day in-range">24</div>
+          <div class="cal-day selected-end">25</div>
+          <div class="cal-day">26</div><div class="cal-day">27</div>
+          <div class="cal-day agosto-blocked">28</div><div class="cal-day agosto-blocked">29</div><div class="cal-day agosto-blocked">30</div><div class="cal-day agosto-blocked">31</div>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(74,124,158,0.15); border:1px solid #4A7C9E;"></div> Reservado</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#1D3557;"></div> Entrada/Salida</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(196,148,58,0.18);"></div> Tu rango</div>
+          <div class="legend-item"><div class="legend-dot" style="background:repeating-linear-gradient(45deg,#EDE8E0,#EDE8E0 3px,#F7F5F2 3px,#F7F5F2 8px);"></div> Solo familia agosto</div>
+        </div>
+        <div class="annotation">Clic en <strong>18 jul</strong> → entrada. Clic en <strong>25 jul</strong> → salida. Rango = 7 noches · 210€</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPCIÓN B: Calendario doble (mes actual + siguiente) -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="card-body">
+      <h3 style="font-family:'Playfair Display',serif; color:#1D3557;">B — Mes doble</h3>
+      <p style="font-family:'DM Sans',sans-serif; color:#5A6068; font-size:13px; margin-bottom:16px;">Dos meses visibles simultáneamente. Ideal para reservas que cruzan de mes. Mejor en escritorio, más cómodo para ver contexto.</p>
+
+      <div style="display:flex; gap:10px;">
+        <div class="cal-wrap" style="flex:1; padding:14px;">
+          <div class="cal-header">
+            <button class="nav-btn">‹</button>
+            <h4 style="font-size:13px;">Julio 2026</h4>
+            <span style="width:28px;"></span>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-day-name">L</div><div class="cal-day-name">M</div><div class="cal-day-name">X</div><div class="cal-day-name">J</div><div class="cal-day-name">V</div><div class="cal-day-name">S</div><div class="cal-day-name">D</div>
+            <div class="cal-day empty"></div><div class="cal-day empty"></div>
+            <div class="cal-day" style="font-size:11px;">1</div><div class="cal-day" style="font-size:11px;">2</div><div class="cal-day" style="font-size:11px;">3</div><div class="cal-day" style="font-size:11px;">4</div><div class="cal-day" style="font-size:11px;">5</div>
+            <div class="cal-day reserved" style="font-size:11px;">6</div><div class="cal-day reserved" style="font-size:11px;">7</div><div class="cal-day" style="font-size:11px;">8</div><div class="cal-day" style="font-size:11px;">9</div><div class="cal-day" style="font-size:11px;">10</div><div class="cal-day" style="font-size:11px;">11</div><div class="cal-day" style="font-size:11px;">12</div>
+            <div class="cal-day today" style="font-size:11px;">13</div><div class="cal-day" style="font-size:11px;">14</div><div class="cal-day" style="font-size:11px;">15</div><div class="cal-day" style="font-size:11px;">16</div><div class="cal-day" style="font-size:11px;">17</div>
+            <div class="cal-day selected-start" style="font-size:11px;">18</div><div class="cal-day in-range" style="font-size:11px;">19</div>
+            <div class="cal-day in-range" style="font-size:11px;">20</div><div class="cal-day in-range" style="font-size:11px;">21</div><div class="cal-day in-range" style="font-size:11px;">22</div><div class="cal-day in-range" style="font-size:11px;">23</div><div class="cal-day in-range" style="font-size:11px;">24</div><div class="cal-day in-range" style="font-size:11px;">25</div><div class="cal-day in-range" style="font-size:11px;">26</div>
+            <div class="cal-day in-range" style="font-size:11px;">27</div><div class="cal-day agosto-blocked" style="font-size:10px;">28</div><div class="cal-day agosto-blocked" style="font-size:10px;">29</div><div class="cal-day agosto-blocked" style="font-size:10px;">30</div><div class="cal-day agosto-blocked" style="font-size:10px;">31</div>
+          </div>
+        </div>
+        <div class="cal-wrap" style="flex:1; padding:14px;">
+          <div class="cal-header">
+            <span style="width:28px;"></span>
+            <h4 style="font-size:13px;">Agosto 2026</h4>
+            <button class="nav-btn">›</button>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-day-name">L</div><div class="cal-day-name">M</div><div class="cal-day-name">X</div><div class="cal-day-name">J</div><div class="cal-day-name">V</div><div class="cal-day-name">S</div><div class="cal-day-name">D</div>
+            <div class="cal-day agosto-blocked" style="font-size:10px;">1</div><div class="cal-day agosto-blocked" style="font-size:10px;">2</div><div class="cal-day agosto-blocked" style="font-size:10px;">3</div>
+            <div class="cal-day in-range" style="font-size:11px;">4</div><div class="cal-day in-range" style="font-size:11px;">5</div><div class="cal-day in-range" style="font-size:11px;">6</div><div class="cal-day selected-end" style="font-size:11px;">7</div>
+            <div class="cal-day agosto-blocked" style="font-size:10px;">8</div><div class="cal-day agosto-blocked" style="font-size:10px;">9</div><div class="cal-day agosto-blocked" style="font-size:10px;">10</div><div class="cal-day agosto-blocked" style="font-size:10px;">11</div><div class="cal-day agosto-blocked" style="font-size:10px;">12</div><div class="cal-day agosto-blocked" style="font-size:10px;">13</div><div class="cal-day agosto-blocked" style="font-size:10px;">14</div>
+            <div class="cal-day agosto-blocked" style="font-size:10px;">15</div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation" style="margin-top:10px;">Entrada <strong>18 jul</strong> → Salida <strong>7 ago</strong> · 20 noches — ⚠️ supera 15 noches máx.</div>
+    </div>
+  </div>
+
+  <!-- OPCIÓN C: Calendario único + panel lateral -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="card-body">
+      <h3 style="font-family:'Playfair Display',serif; color:#1D3557;">C — Panel lateral</h3>
+      <p style="font-family:'DM Sans',sans-serif; color:#5A6068; font-size:13px; margin-bottom:16px;">Calendario mensual + panel lateral derecho con resumen de la selección en tiempo real. Feedback inmediato mientras seleccionas.</p>
+
+      <div style="display:flex; gap:10px; align-items:flex-start;">
+        <div class="cal-wrap" style="flex:1.4; padding:14px;">
+          <div class="cal-header">
+            <button class="nav-btn">‹</button>
+            <h4 style="font-size:14px;">Julio 2026</h4>
+            <button class="nav-btn">›</button>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-day-name">L</div><div class="cal-day-name">M</div><div class="cal-day-name">X</div><div class="cal-day-name">J</div><div class="cal-day-name">V</div><div class="cal-day-name">S</div><div class="cal-day-name">D</div>
+            <div class="cal-day empty"></div><div class="cal-day empty"></div>
+            <div class="cal-day" style="font-size:11px;">1</div><div class="cal-day" style="font-size:11px;">2</div><div class="cal-day" style="font-size:11px;">3</div><div class="cal-day" style="font-size:11px;">4</div><div class="cal-day" style="font-size:11px;">5</div>
+            <div class="cal-day reserved" style="font-size:11px;">6</div><div class="cal-day reserved" style="font-size:11px;">7</div><div class="cal-day reserved" style="font-size:11px;">8</div><div class="cal-day" style="font-size:11px;">9</div><div class="cal-day" style="font-size:11px;">10</div><div class="cal-day" style="font-size:11px;">11</div><div class="cal-day" style="font-size:11px;">12</div>
+            <div class="cal-day" style="font-size:11px;">13</div><div class="cal-day" style="font-size:11px;">14</div><div class="cal-day today" style="font-size:11px;">15</div><div class="cal-day" style="font-size:11px;">16</div><div class="cal-day" style="font-size:11px;">17</div>
+            <div class="cal-day selected-start" style="font-size:11px;">18</div><div class="cal-day in-range" style="font-size:11px;">19</div>
+            <div class="cal-day in-range" style="font-size:11px;">20</div><div class="cal-day in-range" style="font-size:11px;">21</div><div class="cal-day in-range" style="font-size:11px;">22</div><div class="cal-day in-range" style="font-size:11px;">23</div><div class="cal-day in-range" style="font-size:11px;">24</div>
+            <div class="cal-day selected-end" style="font-size:11px;">25</div>
+            <div class="cal-day" style="font-size:11px;">26</div><div class="cal-day" style="font-size:11px;">27</div>
+            <div class="cal-day agosto-blocked" style="font-size:10px;">28</div><div class="cal-day agosto-blocked" style="font-size:10px;">29</div><div class="cal-day agosto-blocked" style="font-size:10px;">30</div><div class="cal-day agosto-blocked" style="font-size:10px;">31</div>
+          </div>
+        </div>
+
+        <!-- Panel lateral -->
+        <div style="flex:1; background:#1D3557; border-radius:8px; padding:14px; color:#F7F5F2;">
+          <div style="font-size:11px; color:#A8C8E0; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;">Tu reserva</div>
+          <div style="font-family:'Playfair Display',serif; font-size:13px; margin-bottom:6px; color:#F7F5F2;">18 jul → 25 jul</div>
+          <div style="font-size:20px; font-weight:700; color:#C4943A; font-family:'Playfair Display',serif; margin-bottom:4px;">7 noches</div>
+          <div style="font-size:22px; font-weight:700; color:#F7F5F2; font-family:'Playfair Display',serif; margin-bottom:10px;">210 €</div>
+          <div style="font-size:11px; color:#8AAFC0; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px; line-height:1.6;">
+            ✓ Fechas libres<br>
+            ✓ Dentro del límite (15 máx)<br>
+            ✓ Fuera de agosto
+          </div>
+          <button style="margin-top:12px; width:100%; background:#C4943A; color:#F7F5F2; border:none; border-radius:5px; padding:9px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; cursor:pointer;">Confirmar reserva</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:20px; font-size:12px; opacity:0.6;">En las tres opciones, al hacer clic en un día reservado siempre se muestra quién lo reservó. Las rayas diagonales = días de agosto reservados para otra familia.</p>

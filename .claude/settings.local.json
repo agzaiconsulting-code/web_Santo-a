@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash:*)",
+      "Bash(npx create-next-app@14 . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --yes)",
+      "Bash(npx create-next-app@14 . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --yes --name=\"casa-cervantes\")",
+      "Read(//c/Users/Adrian/OneDrive/Escritorio/Claude Code Projects/**)",
+      "Bash(npx create-next-app@14 casa-cervantes --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-git --yes)",
+      "Bash(npm install:*)",
+      "Bash(npm view:*)",
+      "Bash(timeout 15 npm run dev)",
+      "Bash(npm run:*)",
+      "Read(//c/Users/Adrian/OneDrive/Escritorio/**)",
+      "Read(//c/Users/Adrian/**)",
+      "Bash(node -e ':*)",
+      "Bash(npx vitest:*)",
+      "Bash(npm ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(C:/Users/Adrian/.claude/plugins/cache/superpowers-marketplace/superpowers/5.0.6/scripts/start-server.sh:*)"
+    ]
+  }
+}

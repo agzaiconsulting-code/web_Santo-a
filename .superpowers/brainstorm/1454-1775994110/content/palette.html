@@ -1,0 +1,137 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&family=Outfit:wght@300;400;500&display=swap');
+
+  .palette-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 3px solid transparent;
+  }
+  .palette-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+  .palette-card.selected { border-color: #2563eb; }
+
+  .card-header {
+    padding: 28px 32px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-nav { font-size: 13px; opacity: 0.7; letter-spacing: 0.05em; }
+  .card-nav a { margin: 0 10px; text-decoration: none; opacity: 0.8; }
+  .card-hero {
+    padding: 36px 32px;
+    text-align: center;
+  }
+  .card-hero .eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 12px; opacity: 0.65; }
+  .card-hero .title { margin: 0 0 10px; }
+  .card-hero .subtitle { margin: 0 0 24px; font-size: 15px; line-height: 1.6; opacity: 0.75; }
+  .card-cta { display: inline-block; padding: 10px 28px; border-radius: 6px; font-size: 14px; font-weight: 500; text-decoration: none; letter-spacing: 0.03em; }
+  .swatches { display: flex; padding: 0 32px 20px; gap: 8px; }
+  .swatch { height: 28px; flex: 1; border-radius: 4px; }
+  .card-label { padding: 10px 32px 16px; font-size: 12px; opacity: 0.55; letter-spacing: 0.05em; text-transform: uppercase; }
+</style>
+
+<h2>¿Qué tono visual encaja mejor con Casa Cervantes?</h2>
+<p class="subtitle">Tres interpretaciones de la estética mediterránea refinada que describiste. Haz clic para seleccionar.</p>
+
+<div class="cards" style="grid-template-columns: repeat(3, 1fr);">
+
+  <!-- OPCIÓN A: Arena cálida / Terracota -->
+  <div class="card palette-card" data-choice="a" onclick="toggleSelect(this)">
+    <div style="background: #F5EFE3; padding: 0;">
+      <div class="card-header" style="background: #F5EFE3; color: #3D2B1F;">
+        <span style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; letter-spacing: 0.02em;">Casa Cervantes</span>
+        <span class="card-nav" style="color: #3D2B1F;">
+          <a style="color: #3D2B1F;">Inicio</a>
+          <a style="color: #3D2B1F;">Calendario</a>
+          <a style="color: #3D2B1F;">Normas</a>
+        </span>
+      </div>
+      <div class="card-hero" style="background: linear-gradient(160deg, #C8855A 0%, #A65C38 100%); color: #FFF8F0; padding: 44px 32px;">
+        <div class="eyebrow" style="color: #FFD8C0;">Santoña, Cantabria</div>
+        <h3 class="title" style="font-family: 'Playfair Display', serif; font-size: 28px; color: #FFF8F0; font-weight: 700;">Nuestra casa familiar<br>en el mar</h3>
+        <p class="subtitle" style="color: #FFD8C0; font-family: 'DM Sans', sans-serif;">Reserva tus días y disfruta<br>de Santoña con la familia.</p>
+        <a class="card-cta" style="background: #FFF8F0; color: #A65C38; font-family: 'DM Sans', sans-serif;">Ver calendario →</a>
+      </div>
+      <div class="swatches" style="background: #F5EFE3; padding: 16px 24px 8px;">
+        <div class="swatch" style="background: #F5EFE3; border: 1px solid #DDD3C5;"></div>
+        <div class="swatch" style="background: #C8855A;"></div>
+        <div class="swatch" style="background: #A65C38;"></div>
+        <div class="swatch" style="background: #3D2B1F;"></div>
+        <div class="swatch" style="background: #FFF8F0;"></div>
+      </div>
+      <div class="card-label" style="background: #F5EFE3; color: #8A7060; font-family: 'DM Sans', sans-serif;">Tipografía: Playfair Display + DM Sans · Calor terracota</div>
+    </div>
+    <div class="card-body" style="background: #F5EFE3;">
+      <h3 style="font-family: 'Playfair Display', serif; color: #3D2B1F;">A — Terracota cálida</h3>
+      <p style="font-family: 'DM Sans', sans-serif; color: #6B5B50; font-size: 14px;">Arena + terracota + marrón oscuro. Evoca casa de campo mediterránea. La más cálida y acogedora.</p>
+    </div>
+  </div>
+
+  <!-- OPCIÓN B: Azul marino / Blanco roto -->
+  <div class="card palette-card" data-choice="b" onclick="toggleSelect(this)">
+    <div style="background: #F8F6F1; padding: 0;">
+      <div class="card-header" style="background: #1B3A5C; color: #F8F6F1;">
+        <span style="font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; letter-spacing: 0.06em;">CASA CERVANTES</span>
+        <span class="card-nav" style="color: #B8CCE0;">
+          <a style="color: #B8CCE0;">Inicio</a>
+          <a style="color: #B8CCE0;">Calendario</a>
+          <a style="color: #B8CCE0;">Normas</a>
+        </span>
+      </div>
+      <div class="card-hero" style="background: linear-gradient(160deg, #1B3A5C 0%, #0F2540 100%); color: #F8F6F1; padding: 44px 32px;">
+        <div class="eyebrow" style="color: #7AAFD4;">Santoña, Cantabria</div>
+        <h3 class="title" style="font-family: 'DM Serif Display', serif; font-size: 28px; color: #F8F6F1; font-weight: 400; letter-spacing: 0.02em;">Nuestra casa familiar<br>en el mar</h3>
+        <p class="subtitle" style="color: #A8C4D8; font-family: 'Outfit', sans-serif; font-weight: 300;">Reserva tus días y disfruta<br>de Santoña con la familia.</p>
+        <a class="card-cta" style="background: #C8855A; color: #FFF8F0; font-family: 'Outfit', sans-serif;">Ver calendario →</a>
+      </div>
+      <div class="swatches" style="background: #F8F6F1; padding: 16px 24px 8px;">
+        <div class="swatch" style="background: #F8F6F1; border: 1px solid #E0DAD0;"></div>
+        <div class="swatch" style="background: #1B3A5C;"></div>
+        <div class="swatch" style="background: #0F2540;"></div>
+        <div class="swatch" style="background: #C8855A;"></div>
+        <div class="swatch" style="background: #7AAFD4;"></div>
+      </div>
+      <div class="card-label" style="background: #F8F6F1; color: #8A8070; font-family: 'Outfit', sans-serif;">Tipografía: DM Serif Display + Outfit · Elegancia náutica</div>
+    </div>
+    <div class="card-body" style="background: #F8F6F1;">
+      <h3 style="font-family: 'DM Serif Display', serif; color: #1B3A5C; font-weight: 400;">B — Náutico elegante</h3>
+      <p style="font-family: 'Outfit', sans-serif; color: #5A6070; font-size: 14px;">Azul marino profundo + blanco roto + acento terracota. Marino costero premium. La más sofisticada.</p>
+    </div>
+  </div>
+
+  <!-- OPCIÓN C: Mixta equilibrada -->
+  <div class="card palette-card" data-choice="c" onclick="toggleSelect(this)">
+    <div style="background: #FAFAF7; padding: 0;">
+      <div class="card-header" style="background: #FAFAF7; color: #2C3E35; border-bottom: 1px solid #E8E3D8;">
+        <span style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; letter-spacing: 0.03em; color: #1B3A5C;">Casa Cervantes</span>
+        <span class="card-nav" style="color: #7A8A80;">
+          <a style="color: #5A6A60;">Inicio</a>
+          <a style="color: #5A6A60;">Calendario</a>
+          <a style="color: #5A6A60;">Normas</a>
+        </span>
+      </div>
+      <div class="card-hero" style="background: linear-gradient(160deg, #E8E0D0 0%, #D4CAB8 100%); color: #2C3E35; padding: 44px 32px;">
+        <div class="eyebrow" style="color: #8A7A60;">Santoña, Cantabria</div>
+        <h3 class="title" style="font-family: 'Playfair Display', serif; font-size: 28px; color: #1B3A5C; font-weight: 700;">Nuestra casa familiar<br>en el mar</h3>
+        <p class="subtitle" style="color: #5A6A60; font-family: 'DM Sans', sans-serif;">Reserva tus días y disfruta<br>de Santoña con la familia.</p>
+        <a class="card-cta" style="background: #1B3A5C; color: #F8F6F1; font-family: 'DM Sans', sans-serif;">Ver calendario →</a>
+      </div>
+      <div class="swatches" style="background: #FAFAF7; padding: 16px 24px 8px;">
+        <div class="swatch" style="background: #FAFAF7; border: 1px solid #E0DAD0;"></div>
+        <div class="swatch" style="background: #E8E0D0;"></div>
+        <div class="swatch" style="background: #1B3A5C;"></div>
+        <div class="swatch" style="background: #C8855A;"></div>
+        <div class="swatch" style="background: #2C3E35;"></div>
+      </div>
+      <div class="card-label" style="background: #FAFAF7; color: #8A8070; font-family: 'DM Sans', sans-serif;">Tipografía: Playfair Display + DM Sans · Arena + marino</div>
+    </div>
+    <div class="card-body" style="background: #FAFAF7;">
+      <h3 style="font-family: 'Playfair Display', serif; color: #1B3A5C;">C — Equilibrio mediterráneo</h3>
+      <p style="font-family: 'DM Sans', sans-serif; color: #5A6A60; font-size: 14px;">Arena + azul marino + terracota como acento. Header claro, hero suave. La más versátil y equilibrada.</p>
+    </div>
+  </div>
+
+</div>

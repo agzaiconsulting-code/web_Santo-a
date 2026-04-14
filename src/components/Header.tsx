@@ -1,3 +1,4 @@
+// src/components/Header.tsx
 'use client'
 
 import Link from 'next/link'
@@ -10,16 +11,21 @@ const NAV_PUBLIC = [
 ]
 
 const NAV_PRIVATE = [
-  { href: '/calendario', label: 'Calendario' },
+  { href: '/calendario', label: 'Calendario'   },
   { href: '/reservas',   label: 'Mis reservas' },
 ]
 
+const NAV_ADMIN = [
+  { href: '/admin', label: 'Admin' },
+]
+
 export function Header() {
-  const pathname     = usePathname()
-  const { isSignedIn } = useUser()
+  const pathname       = usePathname()
+  const { isSignedIn, user } = useUser()
+  const isAdmin = user?.publicMetadata?.role === 'admin'
 
   const allLinks = isSignedIn
-    ? [...NAV_PRIVATE, ...NAV_PUBLIC]
+    ? [...(isAdmin ? NAV_ADMIN : []), ...NAV_PRIVATE, ...NAV_PUBLIC]
     : NAV_PUBLIC
 
   return (
@@ -37,7 +43,7 @@ export function Header() {
         {/* Navegación */}
         <nav className="hidden md:flex items-center gap-7">
           {allLinks.map(({ href, label }) => {
-            const isActive = pathname === href
+            const isActive = pathname === href || pathname.startsWith(href + '/')
             return (
               <Link
                 key={href}

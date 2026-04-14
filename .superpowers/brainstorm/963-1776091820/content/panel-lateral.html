@@ -1,0 +1,170 @@
+<style>
+  :root {
+    --navy: #1D3557; --blue: #4A7C9E; --gold: #C4943A;
+    --light-blue: #A8C8E0; --bg: #F7F5F2; --border: #e2ddd8; --muted: #6a7a88;
+  }
+  .mock-page { font-family: system-ui; background: var(--bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .mock-header { background: white; border-bottom: 1px solid var(--border); padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
+  .mock-header .logo { font-family: Georgia, serif; font-weight: bold; color: var(--navy); font-size: 12px; }
+  .page-body { display: grid; grid-template-columns: 1fr 220px; min-height: 360px; }
+  .cal-area { padding: 12px; }
+  .cal-title { font-family: Georgia, serif; color: var(--navy); font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+  .cal-sub { font-size: 9px; color: var(--muted); margin-bottom: 10px; }
+  .quota-bar { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; margin-bottom: 8px; font-size: 9px; display: flex; align-items: center; gap: 8px; }
+  .quota-track { flex:1; height: 5px; background: #e2ddd8; border-radius: 3px; }
+  .quota-fill { height: 100%; width: 16%; background: var(--gold); border-radius: 3px; }
+  .quota-label { color: var(--muted); }
+  .double-cal { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .mini-cal { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 8px; }
+  .mini-cal .month-name { text-align: center; font-family: Georgia, serif; color: var(--navy); font-size: 11px; font-weight: bold; margin-bottom: 6px; }
+  .mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+  .day-h { text-align: center; font-size: 7px; color: var(--muted); padding: 2px 0; font-weight: 500; }
+  .day { text-align: center; font-size: 8px; padding: 3px 1px; border-radius: 3px; color: #333; }
+  .day.past { color: #ccc; }
+  .day.selected-start, .day.selected-end { background: var(--navy); color: white; border-radius: 4px; font-weight: bold; }
+  .day.in-range { background: rgba(196,148,58,0.2); color: var(--navy); }
+  .day.reserved { background: rgba(74,124,158,0.15); color: var(--blue); }
+
+  /* PANEL LATERAL */
+  .side-panel { background: white; border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+  .panel-header { padding: 12px 14px 8px; border-bottom: 1px solid var(--border); }
+  .panel-title { font-family: Georgia, serif; color: var(--navy); font-size: 13px; font-weight: bold; }
+  .panel-sub { font-size: 9px; color: var(--muted); margin-top: 2px; }
+  .panel-body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; padding: 6px 0; border-bottom: 1px solid #f5f2ef; }
+  .info-label { color: var(--muted); }
+  .info-value { color: var(--navy); font-weight: 600; }
+  .total-row { background: var(--bg); border-radius: 8px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; }
+  .total-label { font-size: 10px; font-weight: 600; color: var(--navy); }
+  .total-value { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .total-sub { font-size: 8px; color: var(--muted); }
+  .panel-note { font-size: 9px; color: var(--muted); background: #f9f7f4; border-radius: 6px; padding: 6px 8px; line-height: 1.4; }
+  .btn-confirm { background: var(--navy); color: white; border-radius: 8px; padding: 9px 14px; font-size: 11px; font-weight: 600; text-align: center; margin-top: auto; cursor: pointer; }
+  .btn-cancel { text-align: center; font-size: 9px; color: var(--muted); margin-top: 4px; cursor: pointer; text-decoration: underline; }
+  .panel-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; padding: 20px; text-align: center; }
+  .panel-empty .icon { font-size: 28px; margin-bottom: 8px; opacity: 0.4; }
+  .panel-empty p { font-size: 10px; color: var(--muted); line-height: 1.5; }
+</style>
+
+<h2>Panel lateral de confirmación</h2>
+<p class="subtitle">El resumen y la confirmación de reserva aparecen fijos en el lado derecho</p>
+
+<div class="split">
+
+  <!-- Estado: sin selección -->
+  <div class="mockup">
+    <div class="mockup-header">Sin fechas seleccionadas</div>
+    <div class="mockup-body" style="padding:0">
+      <div class="mock-page">
+        <div class="mock-header">
+          <span class="logo">Casa Cervantes</span>
+          <span style="color:var(--muted); font-size:10px">Adrian · Fam. Luis</span>
+        </div>
+        <div class="page-body">
+          <div class="cal-area">
+            <div class="cal-title">Calendario</div>
+            <div class="quota-bar">
+              <span class="quota-label">Fam. Luis: 5 / 30 noches</span>
+              <div class="quota-track"><div class="quota-fill"></div></div>
+            </div>
+            <div class="double-cal">
+              <div class="mini-cal">
+                <div class="month-name">Abril 2026</div>
+                <div class="mini-grid">
+                  <div class="day-h">L</div><div class="day-h">M</div><div class="day-h">X</div><div class="day-h">J</div><div class="day-h">V</div><div class="day-h">S</div><div class="day-h">D</div>
+                  <div class="day past">1</div><div class="day past">2</div><div class="day past">3</div><div class="day past">4</div><div class="day past">5</div><div class="day past">6</div>
+                  <div class="day past">7</div><div class="day past">8</div><div class="day past">9</div><div class="day past">10</div><div class="day past">11</div><div class="day past">12</div><div class="day past">13</div>
+                  <div class="day reserved">14</div><div class="day reserved">15</div><div class="day reserved">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div><div class="day">20</div>
+                  <div class="day">21</div><div class="day">22</div><div class="day">23</div><div class="day">24</div><div class="day">25</div><div class="day">26</div><div class="day">27</div>
+                  <div class="day">28</div><div class="day">29</div><div class="day">30</div>
+                </div>
+              </div>
+              <div class="mini-cal">
+                <div class="month-name">Mayo 2026</div>
+                <div class="mini-grid">
+                  <div class="day-h">L</div><div class="day-h">M</div><div class="day-h">X</div><div class="day-h">J</div><div class="day-h">V</div><div class="day-h">S</div><div class="day-h">D</div>
+                  <div class="day"></div><div class="day"></div><div class="day"></div><div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div>
+                  <div class="day">5</div><div class="day">6</div><div class="day">7</div><div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div>
+                  <div class="day">12</div><div class="day">13</div><div class="day">14</div><div class="day">15</div><div class="day">16</div><div class="day">17</div><div class="day">18</div>
+                  <div class="day">19</div><div class="day">20</div><div class="day">21</div><div class="day">22</div><div class="day">23</div><div class="day">24</div><div class="day">25</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="side-panel">
+            <div class="panel-header">
+              <div class="panel-title">Nueva reserva</div>
+              <div class="panel-sub">Selecciona entrada y salida</div>
+            </div>
+            <div class="panel-empty">
+              <div class="icon">📅</div>
+              <p>Haz clic en el día de entrada para comenzar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado: con fechas seleccionadas -->
+  <div class="mockup">
+    <div class="mockup-header">Con fechas seleccionadas — listo para confirmar</div>
+    <div class="mockup-body" style="padding:0">
+      <div class="mock-page">
+        <div class="mock-header">
+          <span class="logo">Casa Cervantes</span>
+          <span style="color:var(--muted); font-size:10px">Adrian · Fam. Luis</span>
+        </div>
+        <div class="page-body">
+          <div class="cal-area">
+            <div class="cal-title">Calendario</div>
+            <div class="quota-bar">
+              <span class="quota-label">Fam. Luis: 5 / 30 noches</span>
+              <div class="quota-track"><div class="quota-fill"></div></div>
+            </div>
+            <div class="double-cal">
+              <div class="mini-cal">
+                <div class="month-name">Abril 2026</div>
+                <div class="mini-grid">
+                  <div class="day-h">L</div><div class="day-h">M</div><div class="day-h">X</div><div class="day-h">J</div><div class="day-h">V</div><div class="day-h">S</div><div class="day-h">D</div>
+                  <div class="day past">1</div><div class="day past">2</div><div class="day past">3</div><div class="day past">4</div><div class="day past">5</div><div class="day past">6</div>
+                  <div class="day past">7</div><div class="day past">8</div><div class="day past">9</div><div class="day past">10</div><div class="day past">11</div><div class="day past">12</div><div class="day past">13</div>
+                  <div class="day reserved">14</div><div class="day reserved">15</div><div class="day reserved">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div><div class="day">20</div>
+                  <div class="day selected-start">21</div><div class="day in-range">22</div><div class="day in-range">23</div><div class="day in-range">24</div><div class="day in-range">25</div><div class="day in-range">26</div><div class="day in-range">27</div>
+                  <div class="day in-range">28</div><div class="day in-range">29</div><div class="day selected-end">30</div>
+                </div>
+              </div>
+              <div class="mini-cal">
+                <div class="month-name">Mayo 2026</div>
+                <div class="mini-grid">
+                  <div class="day-h">L</div><div class="day-h">M</div><div class="day-h">X</div><div class="day-h">J</div><div class="day-h">V</div><div class="day-h">S</div><div class="day-h">D</div>
+                  <div class="day"></div><div class="day"></div><div class="day"></div><div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div>
+                  <div class="day">5</div><div class="day">6</div><div class="day">7</div><div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="side-panel">
+            <div class="panel-header">
+              <div class="panel-title">Nueva reserva</div>
+              <div class="panel-sub">Fam. Luis · 2026</div>
+            </div>
+            <div class="panel-body">
+              <div class="info-row"><span class="info-label">Entrada</span><span class="info-value">Lun 21 abril</span></div>
+              <div class="info-row"><span class="info-label">Salida</span><span class="info-value">Mié 30 abril</span></div>
+              <div class="info-row"><span class="info-label">Noches</span><span class="info-value">9</span></div>
+              <div class="total-row">
+                <div><div class="total-label">Total</div><div class="total-sub">30 € / noche</div></div>
+                <div class="total-value">270 €</div>
+              </div>
+              <div class="panel-note">💳 Pago por transferencia bancaria tras confirmar la reserva.</div>
+              <div class="btn-confirm">Confirmar reserva</div>
+              <div class="btn-cancel">Cancelar selección</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

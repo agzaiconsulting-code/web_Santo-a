@@ -1,21 +1,30 @@
+// src/components/ReservationList.tsx
 'use client'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { formatDateLong, formatPrice } from '@/lib/utils'
 import { CancelConfirmModal } from '@/components/CancelConfirmModal'
-import type { Reservation } from '@/types'
+import type { Reservation, User } from '@/types'
 
 interface ReservationListProps {
   activeReservations: Reservation[]
-  pastReservations: Reservation[]
+  pastReservations:   Reservation[]
+  isAdmin?:           boolean
+  allUsers?:          User[]
 }
 
-export function ReservationList({ activeReservations, pastReservations }: ReservationListProps) {
+export function ReservationList({
+  activeReservations,
+  pastReservations,
+  isAdmin = false,
+  allUsers = [],
+}: ReservationListProps) {
   const router = useRouter()
-  const [cancelTarget, setCancelTarget] = useState<Reservation | null>(null)
-  const [isLoading, setIsLoading]       = useState(false)
-  const [errorMsg, setErrorMsg]         = useState<string | null>(null)
+  const [cancelTarget,    setCancelTarget]    = useState<Reservation | null>(null)
+  const [isLoading,       setIsLoading]       = useState(false)
+  const [errorMsg,        setErrorMsg]        = useState<string | null>(null)
+  const [selectedUserId,  setSelectedUserId]  = useState('')
 
   async function handleCancel() {
     if (!cancelTarget) return
@@ -50,17 +59,52 @@ export function ReservationList({ activeReservations, pastReservations }: Reserv
         </div>
       )}
 
+      {/* Sección admin: crear reserva para familiar */}
+      {isAdmin && (
+        <section className="bg-white border border-border rounded-xl p-4 shadow-card space-y-3">
+          <h2 className="font-display text-lg font-semibold text-navy">Nueva reserva para familiar</h2>
+          <p className="text-sm text-muted">Selecciona el familiar y accede al calendario para elegir fechas.</p>
+          <div className="flex gap-3 flex-wrap">
+            <select
+              value={selectedUserId}
+              onChange={e => setSelectedUserId(e.target.value)}
+              className="flex-1 min-w-[200px] border border-border rounded-lg px-3 py-2 text-sm text-navy bg-white focus:outline-none focus:ring-2 focus:ring-navy/20"
+            >
+              <option value="">Selecciona un familiar...</option>
+              {allUsers.map(u => (
+                <option key={u.id} value={u.id}>
+                  {u.first_name} {u.last_name}
+                  {(u as unknown as { family?: { name: string } | null }).family?.name
+                    ? ` (${(u as unknown as { family: { name: string } }).family.name})`
+                    : ''}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={() => selectedUserId && router.push(`/calendario?for=${selectedUserId}`)}
+              disabled={!selectedUserId}
+              className="px-4 py-2 bg-navy text-white text-sm font-medium rounded-lg hover:bg-navy/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Ir al calendario
+            </button>
+          </div>
+        </section>
+      )}
+
       {/* Reservas activas */}
       <section>
-        <h2 className="font-display text-xl font-semibold text-navy mb-4">Reservas activas</h2>
+        <h2 className="font-display text-xl font-semibold text-navy mb-4">
+          {isAdmin ? 'Todas las reservas activas' : 'Reservas activas'}
+        </h2>
         {activeReservations.length === 0 ? (
-          <p className="text-muted text-sm">No tienes reservas activas.</p>
+          <p className="text-muted text-sm">No hay reservas activas.</p>
         ) : (
           <div className="space-y-3">
             {activeReservations.map(r => (
               <ReservationCard
                 key={r.id}
                 reservation={r}
+                showFamily={isAdmin}
                 onCancel={() => setCancelTarget(r)}
               />
             ))}
@@ -74,7 +118,11 @@ export function ReservationList({ activeReservations, pastReservations }: Reserv
           <h2 className="font-display text-xl font-semibold text-navy mb-4">Historial</h2>
           <div className="space-y-3">
             {pastReservations.map(r => (
-              <ReservationCard key={r.id} reservation={r} />
+              <ReservationCard
+                key={r.id}
+                reservation={r}
+                showFamily={isAdmin}
+              />
             ))}
           </div>
         </section>
@@ -94,23 +142,34 @@ export function ReservationList({ activeReservations, pastReservations }: Reserv
 
 function ReservationCard({
   reservation,
+  showFamily = false,
   onCancel,
 }: {
   reservation: Reservation
+  showFamily?: boolean
   onCancel?: () => void
 }) {
-  const isActive    = reservation.status === 'active'
-  const isFuture    = reservation.check_in >= new Date().toISOString().split('T')[0]
+  const isActive = reservation.status === 'active'
+  const isFuture = reservation.check_in >= new Date().toISOString().split('T')[0]
+  const familyName = (reservation.user as unknown as { family?: { name: string } | null } | undefined)?.family?.name
 
   return (
-    <div className={`bg-white border rounded-xl p-4 shadow-card flex flex-col sm:flex-row sm:items-center gap-4 ${isActive ? 'border-border' : 'border-border opacity-60'}`}>
+    <div className={`bg-white border rounded-xl p-4 shadow-card flex flex-col sm:flex-row sm:items-center gap-4 ${
+      isActive ? 'border-border' : 'border-border opacity-60'
+    }`}>
       <div className="flex-1 space-y-1">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
             isActive ? 'bg-green-100 text-green-700' : 'bg-stone text-muted'
           }`}>
             {isActive ? 'Activa' : 'Cancelada'}
           </span>
+          {showFamily && reservation.user && (
+            <span className="text-xs text-muted">
+              {reservation.user.first_name} {reservation.user.last_name}
+              {familyName ? ` · ${familyName}` : ''}
+            </span>
+          )}
         </div>
         <p className="text-sm font-medium text-navy">
           {formatDateLong(reservation.check_in)} → {formatDateLong(reservation.check_out)}

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casa Cervantes — Landing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="http://localhost:63739/helper.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1D3557; --blue: #4A7C9E; --gold: #C4943A;
+    --light-blue: #A8C8E0; --bg: #F7F5F2; --white: #FFFFFF;
+    --text: #2C3440; --muted: #6A7A88; --border: #E5E0D8;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: #1a1a1a; color: var(--text); }
+
+  /* SHARED HEADER */
+  .header {
+    background: rgba(255,255,255,0.97);
+    border-bottom: 1px solid var(--border);
+    padding: 0 60px;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; z-index: 10;
+    box-shadow: 0 1px 12px rgba(29,53,87,0.06);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--navy); letter-spacing: 0.03em; }
+  .nav a { text-decoration: none; color: var(--muted); font-size: 14px; margin: 0 16px; }
+  .nav a:hover { color: var(--navy); }
+  .login-btn {
+    background: var(--navy); color: #fff;
+    padding: 8px 22px; border-radius: 6px;
+    font-size: 13px; font-weight: 500; text-decoration: none;
+    letter-spacing: 0.03em;
+  }
+
+  /* MOCKUP WRAPPERS */
+  .mockup-wrapper {
+    width: 100%; margin-bottom: 0;
+    cursor: pointer; position: relative;
+    border: 3px solid transparent; transition: border-color 0.2s;
+  }
+  .mockup-wrapper.selected { border-color: #2563eb; }
+  .mockup-wrapper:hover { border-color: rgba(37,99,235,0.4); }
+
+  .choice-label {
+    position: absolute; top: 16px; left: 16px; z-index: 20;
+    background: var(--navy); color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 6px 16px; border-radius: 20px;
+    letter-spacing: 0.05em; pointer-events: none;
+  }
+
+  /* ========================
+     OPCIÓN A — Foto cielo cantábrico con overlay oscuro
+  ======================== */
+  .hero-a {
+    height: 520px;
+    background:
+      linear-gradient(to bottom, rgba(20,35,55,0.55) 0%, rgba(20,35,55,0.3) 40%, rgba(20,35,55,0.7) 100%),
+      url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1400&q=80') center/cover no-repeat;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px;
+    position: relative;
+  }
+  .hero-a .eyebrow {
+    font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--light-blue); margin-bottom: 18px; font-weight: 400;
+  }
+  .hero-a h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 58px; font-weight: 700; line-height: 1.1;
+    color: #fff; margin-bottom: 18px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .hero-a h1 em { color: var(--gold); font-style: italic; }
+  .hero-a p {
+    font-size: 17px; color: rgba(220,235,248,0.88);
+    max-width: 480px; line-height: 1.7; margin-bottom: 36px;
+    font-weight: 300;
+  }
+  .hero-a .cta-group { display: flex; gap: 14px; justify-content: center; }
+  .btn-primary {
+    background: var(--gold); color: #fff;
+    padding: 13px 32px; border-radius: 8px;
+    font-size: 15px; font-weight: 600; text-decoration: none;
+    letter-spacing: 0.03em; border: none; cursor: pointer;
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.12); color: #fff;
+    padding: 13px 32px; border-radius: 8px;
+    font-size: 15px; font-weight: 500; text-decoration: none;
+    letter-spacing: 0.03em; border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(4px);
+  }
+  .scroll-hint {
+    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.45); font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ========================
+     OPCIÓN A — Stats bar
+  ======================== */
+  .stats-bar {
+    background: var(--white); border-top: 3px solid var(--gold);
+    display: flex; justify-content: center; gap: 60px;
+    padding: 24px 60px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .stat { text-align: center; }
+  .stat .num { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--navy); font-weight: 700; }
+  .stat .lbl { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 3px; }
+
+  /* ========================
+     OPCIÓN B — Dos columnas: texto izq + foto der
+  ======================== */
+  .hero-b {
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: 560px; background: var(--bg);
+  }
+  .hero-b-left {
+    padding: 80px 60px;
+    display: flex; flex-direction: column; justify-content: center;
+    background: var(--bg);
+  }
+  .hero-b-left .eyebrow {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 16px; font-weight: 500;
+  }
+  .hero-b-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px; font-weight: 700; line-height: 1.15;
+    color: var(--navy); margin-bottom: 20px;
+  }
+  .hero-b-left h1 em { color: var(--gold); font-style: italic; }
+  .hero-b-left p {
+    font-size: 16px; color: var(--muted); line-height: 1.75;
+    max-width: 400px; margin-bottom: 36px; font-weight: 300;
+  }
+  .hero-b-right {
+    background:
+      url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=900&q=80') center/cover no-repeat;
+    position: relative;
+  }
+  .hero-b-right::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, var(--bg) 0%, transparent 20%);
+  }
+  /* Floating card */
+  .hero-b-card {
+    position: absolute; bottom: 40px; right: 40px; z-index: 5;
+    background: rgba(29,53,87,0.92); backdrop-filter: blur(12px);
+    color: #fff; padding: 20px 24px; border-radius: 12px;
+    border-left: 4px solid var(--gold);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .hero-b-card .card-title { font-size: 12px; color: var(--light-blue); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .hero-b-card .card-val { font-family: 'Playfair Display', serif; font-size: 22px; color: #fff; }
+  .hero-b-card .card-sub { font-size: 12px; color: rgba(168,200,224,0.8); margin-top: 3px; }
+
+  /* ========================
+     OPCIÓN C — Gradiente marino + texto centrado elegante
+  ======================== */
+  .hero-c {
+    min-height: 560px;
+    background: linear-gradient(160deg, #2C4A6E 0%, #1D3557 50%, #162840 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 80px 60px;
+    position: relative; overflow: hidden;
+  }
+  /* Textura sutil de ondas */
+  .hero-c::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at 20% 80%, rgba(74,124,158,0.18) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(196,148,58,0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-c .eyebrow {
+    font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px; font-weight: 400; position: relative;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-c .eyebrow::before, .hero-c .eyebrow::after {
+    content: ''; width: 40px; height: 1px; background: var(--gold); opacity: 0.5;
+  }
+  .hero-c h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px; font-weight: 700; line-height: 1.05;
+    color: #fff; margin-bottom: 8px; position: relative;
+    letter-spacing: -0.01em;
+  }
+  .hero-c h1 .subtitle-line {
+    font-size: 36px; font-weight: 400; font-style: italic;
+    color: rgba(168,200,224,0.9); display: block; margin-top: 4px;
+  }
+  .hero-c p {
+    font-size: 16px; color: rgba(168,200,224,0.75);
+    max-width: 460px; line-height: 1.75; margin: 24px auto 40px;
+    font-weight: 300; position: relative;
+  }
+  .hero-c .cta-group { display: flex; gap: 14px; justify-content: center; position: relative; }
+  /* 4 pillars below hero */
+  .pillars {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    background: var(--white);
+  }
+  .pillar {
+    padding: 28px 32px; border-right: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 16px;
+  }
+  .pillar:last-child { border-right: none; }
+  .pillar-icon {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: rgba(74,124,158,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .pillar-title { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+  .pillar-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* WRAPPER LAYOUT */
+  .options-grid {
+    display: grid; grid-template-columns: 1fr; gap: 4px;
+    background: #111;
+  }
+  .option-meta {
+    background: #1a1a1a; padding: 16px 20px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+  }
+  .option-meta h3 { font-family: 'DM Sans',sans-serif; color: #fff; font-size: 15px; margin-bottom: 4px; }
+  .option-meta p { font-family: 'DM Sans',sans-serif; color: #888; font-size: 13px; line-height: 1.5; max-width: 600px; }
+  .select-badge {
+    flex-shrink: 0; background: #2a3a4a; color: #A8C8E0;
+    padding: 6px 16px; border-radius: 20px; font-size: 12px;
+    font-family: 'DM Sans',sans-serif; font-weight: 500; cursor: pointer;
+    border: 1px solid #3a4a5a; white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .select-badge:hover { background: #1D3557; }
+  .selected-indicator {
+    display: none; color: #C4943A; font-size: 12px;
+    font-family: 'DM Sans',sans-serif; padding: 6px 16px;
+  }
+
+  #selection-indicator { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="options-grid">
+
+  <!-- ====== OPCIÓN A ====== -->
+  <div class="mockup-wrapper" id="opt-a" onclick="selectOption('a')">
+    <div class="choice-label">A — Foto hero full-screen</div>
+    <!-- Header -->
+    <div class="header">
+      <span class="logo">Casa Cervantes</span>
+      <nav class="nav">
+        <a href="#">Inicio</a><a href="#">Calendario</a><a href="#">Normas</a><a href="#">Fotos</a>
+      </nav>
+      <a href="#" class="login-btn">Entrar</a>
+    </div>
+    <!-- Hero -->
+    <div class="hero-a">
+      <div class="eyebrow">Santoña · Cantabria · Calle Cervantes</div>
+      <h1>La casa de todos<br>en el <em>Cantábrico</em></h1>
+      <p>80 personas, 10 familias, una casa. Gestiona tus días en Santoña de forma sencilla y transparente.</p>
+      <div class="cta-group">
+        <a href="#" class="btn-primary">Ver calendario →</a>
+        <a href="#" class="btn-secondary">Conocer las normas</a>
+      </div>
+      <div class="scroll-hint">↓ desplaza</div>
+    </div>
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat"><div class="num">10</div><div class="lbl">Familias</div></div>
+      <div class="stat"><div class="num">80+</div><div class="lbl">Personas</div></div>
+      <div class="stat"><div class="num">30 €</div><div class="lbl">/ noche</div></div>
+      <div class="stat"><div class="num">15</div><div class="lbl">Noches máx.</div></div>
+    </div>
+  </div>
+
+  <div class="option-meta">
+    <div>
+      <h3>A — Foto hero a pantalla completa</h3>
+      <p>Foto de Santoña/Cantabria a toda pantalla con overlay oscuro. El header es transparente sobre la imagen. Barra de stats debajo. Impacto visual máximo desde el primer segundo.</p>
+    </div>
+    <div class="select-badge" onclick="selectOption('a')">Elegir esta →</div>
+  </div>
+
+  <!-- ====== OPCIÓN B ====== -->
+  <div class="mockup-wrapper" id="opt-b" onclick="selectOption('b')">
+    <div class="choice-label">B — Dos columnas: texto + foto</div>
+    <div class="header">
+      <span class="logo">Casa Cervantes</span>
+      <nav class="nav">
+        <a href="#">Inicio</a><a href="#">Calendario</a><a href="#">Normas</a><a href="#">Fotos</a>
+      </nav>
+      <a href="#" class="login-btn">Entrar</a>
+    </div>
+    <div class="hero-b">
+      <div class="hero-b-left">
+        <div class="eyebrow">Santoña · Cantabria</div>
+        <h1>La casa<br>de todos en el<br><em>Cantábrico</em></h1>
+        <p>80 personas, 10 familias, una casa compartida en Calle Cervantes. Consulta disponibilidad y reserva tus fechas.</p>
+        <div style="display:flex; gap:12px;">
+          <a href="#" class="btn-primary" style="font-size:14px; padding:11px 26px;">Ver calendario →</a>
+          <a href="#" class="btn-secondary" style="font-size:14px; padding:11px 26px; color:var(--navy); background:var(--bg); border:1px solid var(--border);">Normas de uso</a>
+        </div>
+      </div>
+      <div class="hero-b-right">
+        <div class="hero-b-card">
+          <div class="card-title">Próximas fechas libres</div>
+          <div class="card-val">15 – 28 julio</div>
+          <div class="card-sub">14 noches disponibles</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option-meta">
+    <div>
+      <h3>B — Dos columnas (texto + foto)</h3>
+      <p>Mitad izquierda: título y CTAs sobre fondo claro. Mitad derecha: foto de Santoña. Más editorial, menos impactante. Con tarjeta flotante de disponibilidad próxima. Muy limpia.</p>
+    </div>
+    <div class="select-badge" onclick="selectOption('b')">Elegir esta →</div>
+  </div>
+
+  <!-- ====== OPCIÓN C ====== -->
+  <div class="mockup-wrapper" id="opt-c" onclick="selectOption('c')">
+    <div class="choice-label">C — Marino elegante sin foto</div>
+    <div class="header" style="background:rgba(29,53,87,0.97); border-bottom-color:rgba(255,255,255,0.1);">
+      <span class="logo" style="color:#fff;">Casa Cervantes</span>
+      <nav class="nav">
+        <a href="#" style="color:rgba(168,200,224,0.8);">Inicio</a>
+        <a href="#" style="color:rgba(168,200,224,0.8);">Calendario</a>
+        <a href="#" style="color:rgba(168,200,224,0.8);">Normas</a>
+        <a href="#" style="color:rgba(168,200,224,0.8);">Fotos</a>
+      </nav>
+      <a href="#" class="login-btn" style="background:var(--gold);">Entrar</a>
+    </div>
+    <div class="hero-c">
+      <div class="eyebrow">Santoña · Cantabria</div>
+      <h1>Casa Cervantes
+        <span class="subtitle-line">nuestra casa en el mar</span>
+      </h1>
+      <p>80 personas, 10 familias. Gestiona tus días en Santoña de forma sencilla, transparente y familiar.</p>
+      <div class="cta-group">
+        <a href="#" class="btn-primary">Ver calendario →</a>
+        <a href="#" class="btn-secondary">Normas de uso</a>
+      </div>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">📅</div>
+        <div><div class="pillar-title">Reserva online</div><div class="pillar-desc">Consulta disponibilidad y reserva tus fechas al instante.</div></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">💶</div>
+        <div><div class="pillar-title">30 € / noche</div><div class="pillar-desc">Pago por transferencia. Máximo 15 noches seguidas.</div></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🏠</div>
+        <div><div class="pillar-title">10 familias</div><div class="pillar-desc">Casa compartida gestionada entre todos con transparencia.</div></div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌊</div>
+        <div><div class="pillar-title">Santoña</div><div class="pillar-desc">Cantabria. A pie de playa, en el corazón del pueblo.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option-meta">
+    <div>
+      <h3>C — Gradiente marino + pilares informativos</h3>
+      <p>Sin foto inicial. Hero con gradiente marino rico + tipografía elegante. Debajo, 4 pilares con los datos clave de la casa. No depende de tener fotos. La más atemporal y sofisticada.</p>
+    </div>
+    <div class="select-badge" onclick="selectOption('c')">Elegir esta →</div>
+  </div>
+
+</div>
+
+<script>
+function selectOption(id) {
+  document.querySelectorAll('.mockup-wrapper').forEach(el => el.classList.remove('selected'));
+  document.getElementById('opt-' + id).classList.add('selected');
+  if (window.recordChoice) recordChoice(id, 'Opción ' + id.toUpperCase());
+}
+</script>
+</body>
+</html>
