@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, DM_Sans } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
+import { auth } from '@clerk/nextjs/server'
 import { Header } from '@/components/Header'
+import { getSupabaseUser } from '@/lib/getUser'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -27,12 +29,19 @@ export const metadata: Metadata = {
   description: 'Gestión de reservas de la casa familiar en Calle Cervantes, Santoña, Cantabria.',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { userId } = await auth()
+  let isAdmin = false
+  if (userId) {
+    const dbUser = await getSupabaseUser(userId)
+    isAdmin = dbUser?.role === 'admin'
+  }
+
   return (
     <ClerkProvider>
       <html lang="es" className={`${playfair.variable} ${dmSans.variable}`}>
         <body className="font-sans bg-stone min-h-screen">
-          <Header />
+          <Header isAdmin={isAdmin} />
           <main className="pt-16">
             {children}
           </main>

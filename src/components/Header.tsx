@@ -18,10 +18,9 @@ const NAV_ADMIN = [
   { href: '/admin', label: 'Admin' },
 ]
 
-export function Header() {
+export function Header({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname       = usePathname()
-  const { isSignedIn, user } = useUser()
-  const isAdmin = user?.publicMetadata?.role === 'admin'
+  const { isSignedIn } = useUser()
 
   const allLinks = isSignedIn
     ? [...(isAdmin ? NAV_ADMIN : []), ...NAV_PRIVATE, ...NAV_PUBLIC]
