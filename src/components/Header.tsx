@@ -5,14 +5,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 
-const NAV_PUBLIC = [
-  { href: '/normas', label: 'Normas' },
-  { href: '/fotos',  label: 'Fotos'  },
-]
+const NAV_PUBLIC: { href: string; label: string }[] = []
 
 const NAV_PRIVATE = [
   { href: '/calendario', label: 'Calendario'   },
   { href: '/reservas',   label: 'Mis reservas' },
+  { href: '/normas',     label: 'Normas'       },
+  { href: '/fotos',      label: 'Fotos'        },
 ]
 
 const NAV_ADMIN = [
