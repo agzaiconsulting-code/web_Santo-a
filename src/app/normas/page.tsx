@@ -18,7 +18,7 @@ const NORMAS = [
   {
     num: '03',
     title: 'Pago por transferencia',
-    body: 'El precio es de 30 €/noche. El pago se realiza mediante transferencia bancaria. La aplicación no gestiona pagos.',
+    body: 'El precio es de 30 €/noche. El pago se realiza mediante transferencia bancaria. El IBAN es ES32 2100 3922 8401 0044 1553.',
   },
   {
     num: '04',
