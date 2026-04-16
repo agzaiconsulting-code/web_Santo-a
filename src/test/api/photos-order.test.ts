@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateOrderPayload } from '@/app/api/photos/order/route'
+import { validateOrderPayload } from '@/lib/validatePhotoOrder'
 
 describe('validateOrderPayload', () => {
   it('acepta payload válido', () => {

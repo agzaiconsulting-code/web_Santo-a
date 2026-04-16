@@ -3,21 +3,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { createAdminClient } from '@/lib/supabase'
 import { getSupabaseUser } from '@/lib/getUser'
-
-export function validateOrderPayload(
-  body: unknown
-): { order: { id: string; sort_order: number }[] } | null {
-  if (!body || typeof body !== 'object') return null
-  const b = body as Record<string, unknown>
-  if (!Array.isArray(b.order)) return null
-  for (const item of b.order) {
-    if (typeof (item as Record<string, unknown>).id !== 'string') return null
-    if (typeof (item as Record<string, unknown>).sort_order !== 'number') return null
-    if (!Number.isInteger((item as Record<string, unknown>).sort_order)) return null
-    if ((item as Record<string, unknown>).sort_order < 0) return null
-  }
-  return b as { order: { id: string; sort_order: number }[] }
-}
+import { validateOrderPayload } from '@/lib/validatePhotoOrder'
 
 export async function PATCH(req: Request) {
   const { userId } = await auth()
