@@ -8,8 +8,7 @@ import { AdminTabs } from '@/components/AdminTabs'
 import { AugustAssignment } from '@/components/AugustAssignment'
 import { PhotoOrderAdmin } from '@/components/PhotoOrderAdmin'
 import { formatPrice } from '@/lib/utils'
-import type { Reservation, Family } from '@/types'
-import type { Photo } from '@/types'
+import type { Reservation, Family, Photo } from '@/types'
 
 export const metadata: Metadata = { title: 'Admin' }
 
