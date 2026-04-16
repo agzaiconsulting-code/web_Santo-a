@@ -6,8 +6,10 @@ import { createAdminClient } from '@/lib/supabase'
 import { getSupabaseUser } from '@/lib/getUser'
 import { AdminTabs } from '@/components/AdminTabs'
 import { AugustAssignment } from '@/components/AugustAssignment'
+import { PhotoOrderAdmin } from '@/components/PhotoOrderAdmin'
 import { formatPrice } from '@/lib/utils'
 import type { Reservation, Family } from '@/types'
+import type { Photo } from '@/types'
 
 export const metadata: Metadata = { title: 'Admin' }
 
@@ -26,6 +28,7 @@ export default async function AdminPage() {
     { data: reservationsRaw },
     { data: augustAssignment },
     { data: familiesRaw },
+    { data: photosRaw },
   ] = await Promise.all([
     supabase
       .from('reservations')
@@ -42,10 +45,15 @@ export default async function AdminPage() {
       .from('families')
       .select('id, name, created_at')
       .order('name'),
+    supabase
+      .from('photos')
+      .select('id, url, sort_order')
+      .order('sort_order'),
   ])
 
   const reservations   = (reservationsRaw ?? []) as unknown as Reservation[]
   const families       = (familiesRaw ?? []) as unknown as Family[]
+  const photos = (photosRaw ?? []) as unknown as Pick<Photo, 'id' | 'url' | 'sort_order'>[]
 
   // Calcular stats
   const activeReservations = reservations.filter(r => r.status === 'active')
@@ -82,6 +90,14 @@ export default async function AdminPage() {
       <div>
         <h2 className="font-display text-xl font-semibold text-navy mb-4">Reservas por mes</h2>
         <AdminTabs reservations={reservations} initialMonth={currentMonth} />
+      </div>
+
+      {/* Ordenación de fotos */}
+      <div>
+        <h2 className="font-display text-xl font-semibold text-navy mb-4">Fotos</h2>
+        <div className="bg-white border border-border rounded-xl p-6 shadow-card">
+          <PhotoOrderAdmin photos={photos} />
+        </div>
       </div>
     </div>
   )
