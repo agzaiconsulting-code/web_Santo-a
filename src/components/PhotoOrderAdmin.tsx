@@ -75,6 +75,7 @@ export function PhotoOrderAdmin({ photos: initialPhotos }: PhotoOrderAdminProps)
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -98,17 +99,25 @@ export function PhotoOrderAdmin({ photos: initialPhotos }: PhotoOrderAdminProps)
 
   const handleSave = useCallback(async () => {
     setSaving(true)
+    setError(null)
     const order = photos.map((p, i) => ({ id: p.id, sort_order: i + 1 }))
-    const res = await fetch('/api/photos/order', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ order }),
-    })
-    setSaving(false)
-    if (res.ok) {
-      setDirty(false)
-      setSaved(true)
-      setTimeout(() => setSaved(false), 3000)
+    try {
+      const res = await fetch('/api/photos/order', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order }),
+      })
+      if (res.ok) {
+        setDirty(false)
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      } else {
+        setError('No se pudo guardar el orden. Inténtalo de nuevo.')
+      }
+    } catch {
+      setError('Error de red. Comprueba tu conexión.')
+    } finally {
+      setSaving(false)
     }
   }, [photos])
 
@@ -131,6 +140,10 @@ export function PhotoOrderAdmin({ photos: initialPhotos }: PhotoOrderAdminProps)
           </button>
         </div>
       </div>
+
+      {error && (
+        <p className="text-sm text-red-600">{error}</p>
+      )}
 
       <DndContext
         sensors={sensors}
