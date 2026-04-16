@@ -1,6 +1,7 @@
 // src/components/Header.tsx
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
@@ -21,6 +22,12 @@ const NAV_ADMIN = [
 export function Header({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname       = usePathname()
   const { isSignedIn } = useUser()
+
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
 
   const allLinks = isSignedIn
     ? [...(isAdmin ? NAV_ADMIN : []), ...NAV_PRIVATE, ...NAV_PUBLIC]
@@ -74,7 +81,50 @@ export function Header({ isAdmin = false }: { isAdmin?: boolean }) {
           )}
         </div>
 
+        {/* Hamburguesa (solo móvil, solo si hay links) */}
+        {isSignedIn && (
+          <button
+            className="md:hidden ml-3 flex flex-col gap-1.5 p-1"
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          >
+            {menuOpen ? (
+              <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
+        )}
+
       </div>
+
+      {/* Menú móvil desplegable */}
+      {menuOpen && (
+        <div className="md:hidden absolute top-16 left-0 right-0 bg-white border-b border-border shadow-md z-40">
+          <nav className="flex flex-col px-6 py-4 gap-1">
+            {allLinks.map(({ href, label }) => {
+              const isActive = pathname === href || pathname.startsWith(href + '/')
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`text-sm py-2.5 border-b border-border/50 last:border-0 transition-colors duration-150 ${
+                    isActive
+                      ? 'text-navy font-medium'
+                      : 'text-muted hover:text-navy'
+                  }`}
+                >
+                  {label}
+                </Link>
+              )
+            })}
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
