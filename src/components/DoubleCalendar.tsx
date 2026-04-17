@@ -9,17 +9,19 @@ import { ReservationPanel } from '@/components/ReservationPanel'
 import type { Reservation, User } from '@/types'
 
 interface DoubleCalendarProps {
-  reservations:          Reservation[]
-  currentUser:           User
-  augustFamilyId:        string | null
-  forUser?:              User
-  hasActiveReservation?: boolean
+  reservations:             Reservation[]
+  currentUser:              User
+  augustFamilyId:           string | null
+  userPrevYearReservations?: Reservation[]
+  forUser?:                 User
+  hasActiveReservation?:    boolean
 }
 
 export function DoubleCalendar({
   reservations,
   currentUser,
   augustFamilyId,
+  userPrevYearReservations = [],
   forUser,
   hasActiveReservation = false,
 }: DoubleCalendarProps) {
@@ -165,6 +167,7 @@ export function DoubleCalendar({
             reservations={reservations}
             currentUser={calendarUser}
             augustFamilyId={augustFamilyId}
+            userPrevYearReservations={userPrevYearReservations}
             selectedStart={selectedStart}
             selectedEnd={selectedEnd}
             onDayClick={handleDayClick}
@@ -175,6 +178,7 @@ export function DoubleCalendar({
             reservations={reservations}
             currentUser={calendarUser}
             augustFamilyId={augustFamilyId}
+            userPrevYearReservations={userPrevYearReservations}
             selectedStart={selectedStart}
             selectedEnd={selectedEnd}
             onDayClick={handleDayClick}
@@ -206,6 +210,7 @@ interface MonthGridProps {
   reservations: Reservation[]
   currentUser: User
   augustFamilyId: string | null
+  userPrevYearReservations: Reservation[]
   selectedStart: string | null
   selectedEnd: string | null
   onDayClick: (date: string, info: DayInfo) => void
@@ -230,7 +235,7 @@ function buildWeeks(days: { date: string; dayOfMonth: number }[], offset: number
 
 function MonthGrid({
   year, month, reservations, currentUser, augustFamilyId,
-  selectedStart, selectedEnd, onDayClick,
+  userPrevYearReservations, selectedStart, selectedEnd, onDayClick,
 }: MonthGridProps) {
   const days  = getDaysInMonth(year, month)
   const weeks = buildWeeks(days, getMonthStartDayOffset(year, month))
@@ -256,6 +261,7 @@ function MonthGrid({
           reservations={reservations}
           currentUser={currentUser}
           augustFamilyId={augustFamilyId}
+          userPrevYearReservations={userPrevYearReservations}
           selectedStart={selectedStart}
           selectedEnd={selectedEnd}
           onDayClick={onDayClick}
@@ -272,6 +278,7 @@ interface WeekRowProps {
   reservations: Reservation[]
   currentUser: User
   augustFamilyId: string | null
+  userPrevYearReservations: Reservation[]
   selectedStart: string | null
   selectedEnd: string | null
   onDayClick: (date: string, info: DayInfo) => void
@@ -285,7 +292,7 @@ function nextDayISO(date: string): string {
 
 function WeekRow({
   slots, reservations, currentUser, augustFamilyId,
-  selectedStart, selectedEnd, onDayClick,
+  userPrevYearReservations, selectedStart, selectedEnd, onDayClick,
 }: WeekRowProps) {
   const cells: React.ReactNode[] = []
   let i = 0
@@ -299,7 +306,7 @@ function WeekRow({
       continue
     }
 
-    const info = getDayInfo(slot.date, slot.dayOfMonth, reservations, currentUser, augustFamilyId, [], selectedStart, selectedEnd)
+    const info = getDayInfo(slot.date, slot.dayOfMonth, reservations, currentUser, augustFamilyId, userPrevYearReservations, selectedStart, selectedEnd)
 
     if (info.state === 'reserved' && info.reservationId) {
       // Contar días consecutivos de la misma reserva en esta semana
@@ -307,7 +314,7 @@ function WeekRow({
       while (i + span < 7) {
         const next = slots[i + span]
         if (!next) break
-        const nextInfo = getDayInfo(next.date, next.dayOfMonth, reservations, currentUser, augustFamilyId, [], selectedStart, selectedEnd)
+        const nextInfo = getDayInfo(next.date, next.dayOfMonth, reservations, currentUser, augustFamilyId, userPrevYearReservations, selectedStart, selectedEnd)
         if (nextInfo.state === 'reserved' && nextInfo.reservationId === info.reservationId) {
           span++
         } else {
@@ -403,19 +410,22 @@ function DayCell({ info, onClick }: { info: DayInfo; onClick: () => void }) {
   const baseClass = 'relative flex items-center justify-center h-16 w-full text-sm rounded-lg transition-colors'
 
   const stateClasses: Record<typeof state, string> = {
-    'past':           'text-muted/40 cursor-not-allowed',
-    'reserved':       'bg-blue/15 text-blue cursor-not-allowed',
-    'august-blocked': 'cursor-not-allowed text-muted/60',
-    'selected-start': 'bg-navy text-white font-semibold cursor-pointer',
-    'selected-end':   'bg-navy text-white font-semibold cursor-pointer',
-    'in-range':       'bg-gold/25 text-navy cursor-pointer',
-    'today':          'text-navy font-medium cursor-pointer hover:bg-blue/10',
-    'available':      'text-navy cursor-pointer hover:bg-blue/10',
+    'past':              'text-muted/40 cursor-not-allowed',
+    'reserved':          'bg-blue/15 text-blue cursor-not-allowed',
+    'august-blocked':    'cursor-not-allowed text-muted/60',
+    'prev-year-blocked': 'cursor-not-allowed text-muted/60',
+    'selected-start':    'bg-navy text-white font-semibold cursor-pointer',
+    'selected-end':      'bg-navy text-white font-semibold cursor-pointer',
+    'in-range':          'bg-gold/25 text-navy cursor-pointer',
+    'today':             'text-navy font-medium cursor-pointer hover:bg-blue/10',
+    'available':         'text-navy cursor-pointer hover:bg-blue/10',
   }
 
   const stripedStyle =
     state === 'august-blocked'
       ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(106,122,136,0.15) 4px, rgba(106,122,136,0.15) 8px)' }
+      : state === 'prev-year-blocked'
+      ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(220,38,38,0.10) 4px, rgba(220,38,38,0.10) 8px)' }
       : undefined
 
   return (
@@ -444,6 +454,7 @@ function Legend() {
       <LegendItem color="bg-navy" label="Seleccionado" textWhite />
       <LegendItem color="bg-gold/25" label="En rango" />
       <LegendItem striped="august" label="Agosto bloqueado" />
+      <LegendItem striped="prev-year" label="Ya disfrutado" />
     </div>
   )
 }
@@ -454,11 +465,13 @@ function LegendItem({
   color?: string
   label: string
   textWhite?: boolean
-  striped?: 'august'
+  striped?: 'august' | 'prev-year'
 }) {
   const stripedStyle =
     striped === 'august'
       ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(106,122,136,0.3) 4px, rgba(106,122,136,0.3) 8px)', width: 16, height: 16 }
+      : striped === 'prev-year'
+      ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(220,38,38,0.15) 4px, rgba(220,38,38,0.15) 8px)', width: 16, height: 16 }
       : undefined
 
   return (
