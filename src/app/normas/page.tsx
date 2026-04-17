@@ -7,38 +7,38 @@ export const metadata: Metadata = {
 const NORMAS = [
   {
     num: '01',
-    title: 'Máximo 15 noches seguidas',
+    title: 'Máximo 15 noches consecutivas',
     body: 'No se puede reservar más de 15 noches consecutivas en la misma estancia.',
   },
   {
     num: '02',
-    title: 'Máximo 30 noches por familia',
-    body: 'Cada familia tiene un límite de 30 noches en la ventana de reserva de 4 meses, sumando todas las reservas de sus miembros.',
+    title: 'Pago por transferencia',
+    body: 'El precio es de 30 €/noche. El pago se realiza mediante transferencia bancaria en un plazo de 5 días. El IBAN es ES32 2100 3922 8401 0044 1553.',
   },
   {
     num: '03',
-    title: 'Pago por transferencia',
-    body: 'El precio es de 30 €/noche. El pago se realiza mediante transferencia bancaria. El IBAN es ES32 2100 3922 8401 0044 1553.',
+    title: 'Cancelaciones',
+    body: 'Si se cancela una reserva no se devuelve el importe abonado, salvo que otra persona quiera esos mismos días o por causa de fuerza mayor. **Se devuelve el importe de los días coincidentes**',
   },
   {
     num: '04',
-    title: 'Cancelaciones',
-    body: 'Si se cancela una reserva no se devuelve el dinero, salvo que otra persona quiera esos mismos días o por causa de fuerza mayor.',
-  },
-  {
-    num: '05',
     title: 'Agosto restringido',
     body: 'Solo puede reservar en agosto la familia a la que le corresponde ese año. El turno rota entre las 7 familias y lo asigna el administrador.',
   },
   {
-    num: '06',
+    num: '05',
     title: 'Antelación máxima de 4 meses',
     body: 'No se pueden hacer reservas con más de 4 meses de antelación respecto a la fecha de entrada.',
   },
   {
-    num: '07',
+    num: '06',
     title: 'Año natural',
     body: 'Solo se puede reservar dentro del año en curso. El 1 de enero se abre la posibilidad de reservar en el nuevo año.',
+  },
+    {
+    num: '07',
+    title: 'Solo una reserva activa',
+    body: 'Solo se puede tener una reserva activa.',
   },
 ]
 
