@@ -6,6 +6,7 @@ export type DayState =
   | 'past'
   | 'reserved'
   | 'august-blocked'
+  | 'prev-year-blocked'
   | 'selected-start'
   | 'selected-end'
   | 'in-range'
@@ -27,6 +28,7 @@ export function getDayInfo(
   reservations: Reservation[],
   currentUser: User,
   augustFamilyId: string | null,
+  userPrevYearReservations: Reservation[],
   selectedStart: string | null,
   selectedEnd: string | null,
 ): DayInfo {
@@ -54,7 +56,18 @@ export function getDayInfo(
     return { date, dayOfMonth, state: 'august-blocked', hasGoldDot }
   }
 
-  // 4. Selección activa
+  // 4. Días disfrutados el año anterior
+  const prevYearDate = `${parseInt(date.slice(0, 4)) - 1}${date.slice(4)}`
+  const blockedByPrevYear = userPrevYearReservations.some(r =>
+    r.status === 'active' &&
+    prevYearDate >= r.check_in &&
+    prevYearDate < r.check_out
+  )
+  if (blockedByPrevYear) {
+    return { date, dayOfMonth, state: 'prev-year-blocked', hasGoldDot }
+  }
+
+  // 5. Selección activa
   if (date === selectedStart) {
     return { date, dayOfMonth, state: 'selected-start', hasGoldDot }
   }
@@ -65,7 +78,7 @@ export function getDayInfo(
     return { date, dayOfMonth, state: 'in-range', hasGoldDot }
   }
 
-  // 5. Hoy disponible
+  // 6. Hoy disponible
   if (hasGoldDot) {
     return { date, dayOfMonth, state: 'today', hasGoldDot: true }
   }

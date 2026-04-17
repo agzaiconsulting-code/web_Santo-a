@@ -299,7 +299,7 @@ function WeekRow({
       continue
     }
 
-    const info = getDayInfo(slot.date, slot.dayOfMonth, reservations, currentUser, augustFamilyId, selectedStart, selectedEnd)
+    const info = getDayInfo(slot.date, slot.dayOfMonth, reservations, currentUser, augustFamilyId, [], selectedStart, selectedEnd)
 
     if (info.state === 'reserved' && info.reservationId) {
       // Contar días consecutivos de la misma reserva en esta semana
@@ -307,7 +307,7 @@ function WeekRow({
       while (i + span < 7) {
         const next = slots[i + span]
         if (!next) break
-        const nextInfo = getDayInfo(next.date, next.dayOfMonth, reservations, currentUser, augustFamilyId, selectedStart, selectedEnd)
+        const nextInfo = getDayInfo(next.date, next.dayOfMonth, reservations, currentUser, augustFamilyId, [], selectedStart, selectedEnd)
         if (nextInfo.state === 'reserved' && nextInfo.reservationId === info.reservationId) {
           span++
         } else {
