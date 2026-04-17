@@ -160,7 +160,7 @@ function ReservationCard({
       <div className="flex-1 space-y-1">
         <div className="flex items-center gap-2 flex-wrap">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-            isActive ? 'bg-green-100 text-green-700' : 'bg-stone text-muted'
+            isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
           }`}>
             {isActive ? 'Activa' : 'Cancelada'}
           </span>

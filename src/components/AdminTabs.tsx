@@ -66,8 +66,8 @@ export function AdminTabs({ reservations, initialMonth }: AdminTabsProps) {
       {monthReservations.length === 0 ? (
         <p className="text-muted text-sm py-4">No hay reservas en {MONTHS[activeMonth - 1]}.</p>
       ) : (
-        <div className="bg-white border border-border rounded-xl overflow-hidden shadow-card">
-          <table className="w-full text-sm">
+        <div className="bg-white border border-border rounded-xl overflow-x-auto shadow-card">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-border bg-stone/50">
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted uppercase tracking-wide">Persona</th>
@@ -98,7 +98,7 @@ export function AdminTabs({ reservations, initialMonth }: AdminTabsProps) {
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                         r.status === 'active'
                           ? 'bg-green-100 text-green-700'
-                          : 'bg-stone text-muted'
+                          : 'bg-red-100 text-red-700'
                       }`}>
                         {r.status === 'active' ? 'Activa' : 'Cancelada'}
                       </span>
