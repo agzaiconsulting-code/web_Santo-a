@@ -12,7 +12,7 @@ interface DoubleCalendarProps {
   reservations:             Reservation[]
   currentUser:              User
   augustFamilyId:           string | null
-  userPrevYearReservations?: Reservation[]
+  userPrevYearReservations: Reservation[]
   forUser?:                 User
   hasActiveReservation?:    boolean
 }
@@ -425,7 +425,7 @@ function DayCell({ info, onClick }: { info: DayInfo; onClick: () => void }) {
     state === 'august-blocked'
       ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(106,122,136,0.15) 4px, rgba(106,122,136,0.15) 8px)' }
       : state === 'prev-year-blocked'
-      ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(220,38,38,0.10) 4px, rgba(220,38,38,0.10) 8px)' }
+      ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(220,38,38,0.15) 4px, rgba(220,38,38,0.15) 8px)' }
       : undefined
 
   return (
@@ -471,7 +471,7 @@ function LegendItem({
     striped === 'august'
       ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(106,122,136,0.3) 4px, rgba(106,122,136,0.3) 8px)', width: 16, height: 16 }
       : striped === 'prev-year'
-      ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(220,38,38,0.15) 4px, rgba(220,38,38,0.15) 8px)', width: 16, height: 16 }
+      ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(220,38,38,0.30) 4px, rgba(220,38,38,0.30) 8px)', width: 16, height: 16 }
       : undefined
 
   return (
