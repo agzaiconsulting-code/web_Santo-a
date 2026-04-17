@@ -42,9 +42,10 @@ export async function POST(req: Request): Promise<Response> {
 
   const { data: reservationId, error: rpcError } = await supabase
     .rpc('create_reservation', {
-      p_user_id:   targetUserId,
-      p_check_in:  check_in,
-      p_check_out: check_out,
+      p_user_id:           targetUserId,
+      p_check_in:          check_in,
+      p_check_out:         check_out,
+      p_caller_is_admin:   caller.role === 'admin',
     })
 
   if (rpcError) {
