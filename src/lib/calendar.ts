@@ -3,23 +3,22 @@ import { isDateInRange, todayISO } from '@/lib/utils'
 import type { Reservation, User } from '@/types'
 
 export type DayState =
-  | 'past'           // anterior a hoy — no seleccionable, opacidad reducida
-  | 'reserved'       // cubierto por reserva activa — muestra nombre, no seleccionable
-  | 'august-blocked' // agosto + familia incorrecta — rayas grises, no seleccionable
-  | 'quota-full'     // cuota de 30 noches agotada — rayas suaves, no seleccionable
-  | 'selected-start' // inicio del rango seleccionado — fondo navy
-  | 'selected-end'   // fin del rango seleccionado — fondo navy
-  | 'in-range'       // dentro del rango seleccionado — fondo dorado suave
-  | 'today'          // hoy — punto dorado (disponible y seleccionable)
-  | 'available'      // disponible — seleccionable
+  | 'past'
+  | 'reserved'
+  | 'august-blocked'
+  | 'selected-start'
+  | 'selected-end'
+  | 'in-range'
+  | 'today'
+  | 'available'
 
 export interface DayInfo {
   date: string        // 'YYYY-MM-DD'
   dayOfMonth: number
   state: DayState
-  hasGoldDot: boolean // true cuando es hoy (se superpone al estado principal)
-  reserverName?: string   // solo cuando state === 'reserved'
-  reservationId?: string  // solo cuando state === 'reserved'
+  hasGoldDot: boolean
+  reserverName?: string
+  reservationId?: string
 }
 
 export function getDayInfo(
@@ -28,7 +27,6 @@ export function getDayInfo(
   reservations: Reservation[],
   currentUser: User,
   augustFamilyId: string | null,
-  quotaUsed: number,
   selectedStart: string | null,
   selectedEnd: string | null,
 ): DayInfo {
@@ -40,7 +38,7 @@ export function getDayInfo(
     return { date, dayOfMonth, state: 'past', hasGoldDot: false }
   }
 
-  // 2. Reservado: alguna reserva activa cubre este día
+  // 2. Reservado
   const coveringReservation = reservations.find(r =>
     r.status === 'active' && isDateInRange(date, r.check_in, r.check_out)
   )
@@ -50,18 +48,13 @@ export function getDayInfo(
     return { date, dayOfMonth, state: 'reserved', hasGoldDot, reserverName, reservationId: coveringReservation.id }
   }
 
-  // 3. Agosto bloqueado: mes 8 y la familia del usuario no es la asignada
+  // 3. Agosto bloqueado
   const isAugust = date.substring(5, 7) === '08'
   if (isAugust && augustFamilyId !== null && currentUser.family_id !== augustFamilyId) {
     return { date, dayOfMonth, state: 'august-blocked', hasGoldDot }
   }
 
-  // 4. Cuota familiar agotada (solo aplica a días futuros no reservados)
-  if (quotaUsed >= 30) {
-    return { date, dayOfMonth, state: 'quota-full', hasGoldDot }
-  }
-
-  // 5. Selección activa
+  // 4. Selección activa
   if (date === selectedStart) {
     return { date, dayOfMonth, state: 'selected-start', hasGoldDot }
   }
@@ -72,7 +65,7 @@ export function getDayInfo(
     return { date, dayOfMonth, state: 'in-range', hasGoldDot }
   }
 
-  // 6. Hoy disponible
+  // 5. Hoy disponible
   if (hasGoldDot) {
     return { date, dayOfMonth, state: 'today', hasGoldDot: true }
   }

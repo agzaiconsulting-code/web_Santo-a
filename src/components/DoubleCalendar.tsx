@@ -9,19 +9,19 @@ import { ReservationPanel } from '@/components/ReservationPanel'
 import type { Reservation, User } from '@/types'
 
 interface DoubleCalendarProps {
-  reservations:   Reservation[]
-  currentUser:    User
-  augustFamilyId: string | null
-  quotaUsed:      number
-  forUser?:       User   // si está presente, el admin crea la reserva para este familiar
+  reservations:          Reservation[]
+  currentUser:           User
+  augustFamilyId:        string | null
+  forUser?:              User
+  hasActiveReservation?: boolean
 }
 
 export function DoubleCalendar({
   reservations,
   currentUser,
   augustFamilyId,
-  quotaUsed,
   forUser,
+  hasActiveReservation = false,
 }: DoubleCalendarProps) {
   const router = useRouter()
   const now = new Date()
@@ -55,6 +55,7 @@ export function DoubleCalendar({
   }
 
   const handleDayClick = useCallback((date: string, info: DayInfo) => {
+    if (hasActiveReservation) return
     if (!isDaySelectable(info.state)) return
     setErrorMsg(null)
 
@@ -78,7 +79,7 @@ export function DoubleCalendar({
     }
 
     setSelectedEnd(date)
-  }, [selectedStart, selectedEnd, reservations])
+  }, [selectedStart, selectedEnd, reservations, hasActiveReservation])
 
   async function handleConfirmReservation() {
     if (!selectedStart || !selectedEnd) return
@@ -142,6 +143,13 @@ export function DoubleCalendar({
           </button>
         </div>
 
+        {/* Aviso reserva activa */}
+        {hasActiveReservation && (
+          <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg px-4 py-2.5">
+            No puedes realizar otra reserva debido a que tienes una reserva activa.
+          </div>
+        )}
+
         {/* Error de rango (sin selección activa) */}
         {errorMsg && !selectedEnd && (
           <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-2.5">
@@ -157,7 +165,6 @@ export function DoubleCalendar({
             reservations={reservations}
             currentUser={calendarUser}
             augustFamilyId={augustFamilyId}
-            quotaUsed={quotaUsed}
             selectedStart={selectedStart}
             selectedEnd={selectedEnd}
             onDayClick={handleDayClick}
@@ -168,7 +175,6 @@ export function DoubleCalendar({
             reservations={reservations}
             currentUser={calendarUser}
             augustFamilyId={augustFamilyId}
-            quotaUsed={quotaUsed}
             selectedStart={selectedStart}
             selectedEnd={selectedEnd}
             onDayClick={handleDayClick}
@@ -200,7 +206,6 @@ interface MonthGridProps {
   reservations: Reservation[]
   currentUser: User
   augustFamilyId: string | null
-  quotaUsed: number
   selectedStart: string | null
   selectedEnd: string | null
   onDayClick: (date: string, info: DayInfo) => void
@@ -225,7 +230,7 @@ function buildWeeks(days: { date: string; dayOfMonth: number }[], offset: number
 
 function MonthGrid({
   year, month, reservations, currentUser, augustFamilyId,
-  quotaUsed, selectedStart, selectedEnd, onDayClick,
+  selectedStart, selectedEnd, onDayClick,
 }: MonthGridProps) {
   const days  = getDaysInMonth(year, month)
   const weeks = buildWeeks(days, getMonthStartDayOffset(year, month))
@@ -251,7 +256,6 @@ function MonthGrid({
           reservations={reservations}
           currentUser={currentUser}
           augustFamilyId={augustFamilyId}
-          quotaUsed={quotaUsed}
           selectedStart={selectedStart}
           selectedEnd={selectedEnd}
           onDayClick={onDayClick}
@@ -268,7 +272,6 @@ interface WeekRowProps {
   reservations: Reservation[]
   currentUser: User
   augustFamilyId: string | null
-  quotaUsed: number
   selectedStart: string | null
   selectedEnd: string | null
   onDayClick: (date: string, info: DayInfo) => void
@@ -282,7 +285,7 @@ function nextDayISO(date: string): string {
 
 function WeekRow({
   slots, reservations, currentUser, augustFamilyId,
-  quotaUsed, selectedStart, selectedEnd, onDayClick,
+  selectedStart, selectedEnd, onDayClick,
 }: WeekRowProps) {
   const cells: React.ReactNode[] = []
   let i = 0
@@ -296,7 +299,7 @@ function WeekRow({
       continue
     }
 
-    const info = getDayInfo(slot.date, slot.dayOfMonth, reservations, currentUser, augustFamilyId, quotaUsed, selectedStart, selectedEnd)
+    const info = getDayInfo(slot.date, slot.dayOfMonth, reservations, currentUser, augustFamilyId, selectedStart, selectedEnd)
 
     if (info.state === 'reserved' && info.reservationId) {
       // Contar días consecutivos de la misma reserva en esta semana
@@ -304,7 +307,7 @@ function WeekRow({
       while (i + span < 7) {
         const next = slots[i + span]
         if (!next) break
-        const nextInfo = getDayInfo(next.date, next.dayOfMonth, reservations, currentUser, augustFamilyId, quotaUsed, selectedStart, selectedEnd)
+        const nextInfo = getDayInfo(next.date, next.dayOfMonth, reservations, currentUser, augustFamilyId, selectedStart, selectedEnd)
         if (nextInfo.state === 'reserved' && nextInfo.reservationId === info.reservationId) {
           span++
         } else {
@@ -403,7 +406,6 @@ function DayCell({ info, onClick }: { info: DayInfo; onClick: () => void }) {
     'past':           'text-muted/40 cursor-not-allowed',
     'reserved':       'bg-blue/15 text-blue cursor-not-allowed',
     'august-blocked': 'cursor-not-allowed text-muted/60',
-    'quota-full':     'cursor-not-allowed text-muted/60',
     'selected-start': 'bg-navy text-white font-semibold cursor-pointer',
     'selected-end':   'bg-navy text-white font-semibold cursor-pointer',
     'in-range':       'bg-gold/25 text-navy cursor-pointer',
@@ -414,8 +416,6 @@ function DayCell({ info, onClick }: { info: DayInfo; onClick: () => void }) {
   const stripedStyle =
     state === 'august-blocked'
       ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(106,122,136,0.15) 4px, rgba(106,122,136,0.15) 8px)' }
-      : state === 'quota-full'
-      ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(196,148,58,0.12) 4px, rgba(196,148,58,0.12) 8px)' }
       : undefined
 
   return (
@@ -444,7 +444,6 @@ function Legend() {
       <LegendItem color="bg-navy" label="Seleccionado" textWhite />
       <LegendItem color="bg-gold/25" label="En rango" />
       <LegendItem striped="august" label="Agosto bloqueado" />
-      <LegendItem striped="quota" label="Cuota agotada" />
     </div>
   )
 }
@@ -455,13 +454,11 @@ function LegendItem({
   color?: string
   label: string
   textWhite?: boolean
-  striped?: 'august' | 'quota'
+  striped?: 'august'
 }) {
   const stripedStyle =
     striped === 'august'
       ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(106,122,136,0.3) 4px, rgba(106,122,136,0.3) 8px)', width: 16, height: 16 }
-      : striped === 'quota'
-      ? { background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(196,148,58,0.3) 4px, rgba(196,148,58,0.3) 8px)', width: 16, height: 16 }
       : undefined
 
   return (
