@@ -64,7 +64,10 @@ export default async function CalendarioPage({
   ])
 
   const reservations = (reservationsRaw ?? []) as unknown as Reservation[]
-  const userPrevYearReservations = (prevYearRaw ?? []) as unknown as Reservation[]
+  const userPrevYearReservations =
+    user.role === 'admin' && !forUser
+      ? []
+      : (prevYearRaw ?? []) as unknown as Reservation[]
 
   const today = new Date().toISOString().split('T')[0]
   const hasActiveReservation =
