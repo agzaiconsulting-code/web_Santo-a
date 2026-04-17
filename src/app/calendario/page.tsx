@@ -37,10 +37,12 @@ export default async function CalendarioPage({
 
   const effectiveUser = forUser ?? user
   const currentYear = new Date().getFullYear()
+  const prevYear = currentYear - 1
 
   const [
     { data: reservationsRaw },
     { data: augustAssignment },
+    { data: prevYearRaw },
   ] = await Promise.all([
     supabase
       .from('reservations')
@@ -52,9 +54,17 @@ export default async function CalendarioPage({
       .select('family_id, family:families(name)')
       .eq('year', currentYear)
       .maybeSingle(),
+    supabase
+      .from('reservations')
+      .select('id, user_id, check_in, check_out, status')
+      .eq('user_id', effectiveUser.id)
+      .eq('status', 'active')
+      .gte('check_in', `${prevYear}-01-01`)
+      .lt('check_in', `${currentYear}-01-01`),
   ])
 
   const reservations = (reservationsRaw ?? []) as unknown as Reservation[]
+  const userPrevYearReservations = (prevYearRaw ?? []) as unknown as Reservation[]
 
   const today = new Date().toISOString().split('T')[0]
   const hasActiveReservation =
@@ -97,6 +107,7 @@ export default async function CalendarioPage({
         reservations={reservations}
         currentUser={user}
         augustFamilyId={augustAssignment?.family_id ?? null}
+        userPrevYearReservations={userPrevYearReservations}
         forUser={forUser ?? undefined}
         hasActiveReservation={hasActiveReservation}
       />
