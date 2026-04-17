@@ -66,13 +66,17 @@ BEGIN
   END IF;
 
   -- 7. Mismos días disfrutados el año anterior (solo no-admin)
+  --    Llega aquí porque la reserva anterior ya ha finalizado (check_out <= CURRENT_DATE).
+  --    Impide reutilizar el mismo bloque de fechas año a año.
   IF NOT p_caller_is_admin THEN
     IF EXISTS (
       SELECT 1 FROM reservations
       WHERE user_id  = p_user_id
         AND status   = 'active'
-        AND check_in  < (p_check_out - INTERVAL '1 year')
-        AND check_out > (p_check_in  - INTERVAL '1 year')
+        AND check_in  >= make_date(v_current_year - 1, 1, 1)
+        AND check_in  <  make_date(v_current_year,     1, 1)
+        AND check_in  <  (p_check_out - INTERVAL '1 year')
+        AND check_out >  (p_check_in  - INTERVAL '1 year')
     ) THEN
       RAISE EXCEPTION 'No puedes reservar fechas que ya disfrutaste el año anterior';
     END IF;
