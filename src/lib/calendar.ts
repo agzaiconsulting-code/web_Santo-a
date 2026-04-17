@@ -56,15 +56,17 @@ export function getDayInfo(
     return { date, dayOfMonth, state: 'august-blocked', hasGoldDot }
   }
 
-  // 4. Días disfrutados el año anterior
-  const prevYearDate = `${parseInt(date.slice(0, 4)) - 1}${date.slice(4)}`
-  const blockedByPrevYear = userPrevYearReservations.some(r =>
-    r.status === 'active' &&
-    prevYearDate >= r.check_in &&
-    prevYearDate < r.check_out
-  )
-  if (blockedByPrevYear) {
-    return { date, dayOfMonth, state: 'prev-year-blocked', hasGoldDot }
+  // 4. Días disfrutados el año anterior (asume fechas con año de 4 dígitos, rango 1000–9999)
+  if (userPrevYearReservations.length > 0) {
+    const prevYearDate = `${parseInt(date.slice(0, 4)) - 1}${date.slice(4)}`
+    const blockedByPrevYear = userPrevYearReservations.some(r =>
+      r.status === 'active' &&
+      prevYearDate >= r.check_in &&
+      prevYearDate < r.check_out
+    )
+    if (blockedByPrevYear) {
+      return { date, dayOfMonth, state: 'prev-year-blocked', hasGoldDot }
+    }
   }
 
   // 5. Selección activa
