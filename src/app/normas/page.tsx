@@ -13,7 +13,7 @@ const NORMAS = [
   {
     num: '02',
     title: 'Pago por transferencia',
-    body: 'El precio es de 30 €/noche. El pago se realiza mediante transferencia bancaria en un plazo de 5 días. El IBAN es ES32 2100 3922 8401 0044 1553.',
+    body: 'El precio es de 30 €/noche. El pago se realiza mediante transferencia bancaria en un plazo de 5 días. El IBAN es ES32 2100 3922 8401 0044 1553. Cuando se ejecute el pago, avisar a Kike. Si no se ha realizado el ingreso en el plazo, el administrador podrá cancelar la reserva',
   },
   {
     num: '03',
