@@ -9,10 +9,11 @@ import { AugustAssignment } from '@/components/AugustAssignment'
 import { PhotoOrderAdmin } from '@/components/PhotoOrderAdmin'
 import { formatPrice } from '@/lib/utils'
 import type { Reservation, Family, Photo } from '@/types'
+import { YearNav } from '@/components/YearNav'
 
 export const metadata: Metadata = { title: 'Admin' }
 
-export default async function AdminPage() {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ year?: string }> }) {
   const { userId: clerkUserId } = await auth()
   if (!clerkUserId) redirect('/sign-in')
 
@@ -21,7 +22,9 @@ export default async function AdminPage() {
   const currentUser = await getSupabaseUser(clerkUserId)
   if (!currentUser || currentUser.role !== 'admin') redirect('/')
 
+  const { year: yearParam } = await searchParams
   const currentYear = new Date().getFullYear()
+  const year = yearParam ? parseInt(yearParam, 10) : currentYear
 
   const [
     { data: reservationsRaw },
@@ -32,13 +35,13 @@ export default async function AdminPage() {
     supabase
       .from('reservations')
       .select('id, user_id, check_in, check_out, nights, total_price, status, created_at, updated_at, cancelled_at, user:users(id, first_name, last_name, family:families(name))')
-      .gte('check_in', `${currentYear}-01-01`)
-      .lte('check_in', `${currentYear}-12-31`)
+      .gte('check_in', `${year}-01-01`)
+      .lte('check_in', `${year}-12-31`)
       .order('check_in'),
     supabase
       .from('august_assignments')
       .select('family_id, family:families(name)')
-      .eq('year', currentYear)
+      .eq('year', year)
       .maybeSingle(),
     supabase
       .from('families')
@@ -61,26 +64,29 @@ export default async function AdminPage() {
   const augustFamily = (augustAssignment as unknown as { family?: { name: string } | null } | null)?.family?.name ?? '—'
   const augustFamilyId = (augustAssignment as { family_id?: string } | null)?.family_id ?? null
 
-  const currentMonth = new Date().getMonth() + 1
+  const currentMonth = year === currentYear ? new Date().getMonth() + 1 : 1
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
       <div>
-        <h1 className="font-display text-3xl font-bold text-navy">Panel de administración</h1>
-        <p className="text-muted text-sm mt-1">Resumen de reservas · {currentYear}</p>
+        <div className="flex items-center gap-4">
+          <h1 className="font-display text-3xl font-bold text-navy">Panel de administración</h1>
+          <YearNav year={year} />
+        </div>
+        <p className="text-muted text-sm mt-1">Resumen de reservas · {year}</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Reservas activas"  value={String(activeReservations.length)} sub="este año" />
-        <StatCard label="Noches totales"    value={String(totalNights)}               sub={`año ${currentYear}`} />
-        <StatCard label="Ingresos"          value={formatPrice(totalIncome)}           sub={`año ${currentYear}`} />
-        <StatCard label="Familia de agosto" value={augustFamily}                       sub={String(currentYear)} />
+        <StatCard label="Noches totales"    value={String(totalNights)}               sub={`año ${year}`} />
+        <StatCard label="Ingresos"          value={formatPrice(totalIncome)}           sub={`año ${year}`} />
+        <StatCard label="Familia de agosto" value={augustFamily}                       sub={String(year)} />
       </div>
 
       {/* Asignación agosto */}
       <AugustAssignment
-        year={currentYear}
+        year={year}
         families={families}
         currentFamilyId={augustFamilyId}
       />
